@@ -1,16 +1,14 @@
 #pragma once
 
-#include "glad/glad.h"
+
 
 #include <vector>
-#include "Shader.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 #include <memory>
 #include <numeric>
 
+#include "glad/glad.h"
 
+#include "Shader.h"
 
 class GlMesh {
 

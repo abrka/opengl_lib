@@ -20,9 +20,9 @@ target_link_libraries(opengl_ui PUBLIC glfw)
 add_subdirectory(external/glm)
 target_link_libraries(opengl_ui PUBLIC glm::glm)
 
-# Add assimp
-add_subdirectory(external/assimp)
-target_link_libraries(opengl_ui PUBLIC assimp::assimp)
+# Add FreeType
+add_subdirectory(external/freetype)
+target_link_libraries(opengl_ui PUBLIC freetype)
 
 # Build imgui
 add_library(imgui external/imgui-docking/imconfig.h

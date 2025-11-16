@@ -5,9 +5,12 @@
 #include <cassert>
 
 struct TextureSpec {
+	GLenum InternalTexFormat{ GL_RGB };
+	GLenum TextureFormat{ GL_RGB };
 	bool GenerateMipmap{ true };
 	GLenum WrapMode{ GL_REPEAT };
 	GLenum TextureDataType{ GL_UNSIGNED_BYTE };
+	GLenum FilterType{ GL_LINEAR };
 };
 
 
@@ -19,8 +22,8 @@ public:
 	unsigned int height;
 	GLenum TextureFormat;
 
-	GlTexture(const GLenum _InternalTexFormat, const GLenum _TextureFormat, unsigned int _width, unsigned int _height, unsigned char* _TextureData, TextureSpec _TexSpec = TextureSpec{})
-		: width(_width), height(_height), TextureFormat(_TextureFormat) {
+	GlTexture( unsigned int _width, unsigned int _height, unsigned char* _TextureData, TextureSpec _TexSpec)
+		: width(_width), height(_height), TextureFormat(_TexSpec.TextureFormat) {
 
 		glGenTextures(1, &ID);
 		glBindTexture(GL_TEXTURE_2D, ID);
@@ -28,19 +31,17 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _TexSpec.WrapMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _TexSpec.WrapMode);
 		// set texture filtering parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _TexSpec.FilterType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _TexSpec.FilterType);
 
 
-		glTexImage2D(GL_TEXTURE_2D, 0, _InternalTexFormat, _width, _height, 0, _TextureFormat, _TexSpec.TextureDataType, _TextureData);
+		glTexImage2D(GL_TEXTURE_2D, 0, _TexSpec.InternalTexFormat, _width, _height, 0, _TexSpec.TextureFormat, _TexSpec.TextureDataType, _TextureData);
 
 		if (_TexSpec.GenerateMipmap) {
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 	
 	}
-
-
 
 	void Bind() const {
 		glBindTexture(GL_TEXTURE_2D, ID);
