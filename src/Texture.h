@@ -17,13 +17,18 @@ struct TextureSpec {
 class GlTexture {
 
 public:
-	unsigned int ID = 0;
-	unsigned int width;
-	unsigned int height;
-	GLenum TextureFormat;
+	unsigned int ID{};
+	unsigned int width{};
+	unsigned int height{};
+	GLenum TextureFormat{};
 
-	GlTexture( unsigned int _width, unsigned int _height, unsigned char* _TextureData, TextureSpec _TexSpec)
-		: width(_width), height(_height), TextureFormat(_TexSpec.TextureFormat) {
+	void LoadTexture( unsigned int _width, unsigned int _height, unsigned char* _TextureData, TextureSpec _TexSpec) {
+
+		assert(_TextureData);
+
+		width = _width;
+		height = _height;
+		TextureFormat = _TexSpec.TextureFormat;
 
 		glGenTextures(1, &ID);
 		glBindTexture(GL_TEXTURE_2D, ID);
@@ -54,7 +59,4 @@ public:
 		glActiveTexture(GL_TEXTURE0 + TextureUnit);
 		glBindTexture(GL_TEXTURE_2D, ID);
 	}
-
-	GlTexture(const GlTexture& rhs) = delete;
-	GlTexture& operator=(const GlTexture& rhs) = delete;
 };
