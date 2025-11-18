@@ -51,11 +51,6 @@ namespace GLRenderer {
 			font = std::make_unique<Font>(& ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256 );
 		}
 
-		~Renderer()
-		{
-			imgui_end();
-		}
-
 		void render(int screen_width, int screen_height) {
 			imgui_frame_init();
 

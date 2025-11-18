@@ -12,9 +12,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "GL3D/Texture.h"
-#include "GL3D/Mesh.h"
-#include "GL3D/Shader.h"
+#include "GL3D/texture.h"
+#include "GL3D/mesh.h"
+#include "GL3D/shader.h"
 
 namespace GLRenderer {
 	struct FontFace {

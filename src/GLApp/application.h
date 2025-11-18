@@ -32,6 +32,7 @@ namespace GLApp {
 		}
 		~Application()
 		{
+			imgui_end();
 			glfw_end();
 		}
 		void run() {

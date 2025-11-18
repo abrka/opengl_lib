@@ -4,13 +4,15 @@
 
 void glfw_error_callback(int error, const char* description) {
 	fprintf(stderr, "[GLFW ERROR] %d: %s\n", error, description);
+	assert(false);
 }
 
 GLFWwindow* glfw_init(int screen_width, int screen_height) {
 	glfwSetErrorCallback(glfw_error_callback);
 	// glfw: initialize and configure
 	// ------------------------------
-	glfwInit();
+	int ret = glfwInit();
+	assert(ret == GLFW_TRUE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
