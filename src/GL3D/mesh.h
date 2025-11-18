@@ -1,14 +1,13 @@
 #pragma once
 
 
-
 #include <vector>
 #include <memory>
 #include <numeric>
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 
-#include "Shader.h"
+#include "shader.h"
 
 namespace GL3D {
 	class Mesh {
