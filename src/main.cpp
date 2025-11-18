@@ -6,17 +6,17 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-#include "GladUtil.h"
-#include "GlfwUtil.h"
-#include "GlUtils.h"
-#include "ImguiUtil.h"
+#include "glad_util.h"
+#include "glfw_util.h"
+#include "opengl_util.h"
+#include "imgui_util.h"
 
-#include "Framebuffer.h"
-#include "Mesh.h"
-#include "Renderbuffer.h"
-#include "Shader.h"
-#include "Texture.h"
-#include "Font.h"
+#include "frame_buffer.h"
+#include "mesh.h"
+#include "render_buffer.h"
+#include "shader.h"
+#include "texture.h"
+#include "font.h"
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
