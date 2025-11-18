@@ -11,11 +11,11 @@
 #include "opengl_util.h"
 #include "imgui_util.h"
 
-#include "frame_buffer.h"
-#include "mesh.h"
-#include "render_buffer.h"
-#include "shader.h"
-#include "texture.h"
+#include "GL3D/frame_buffer.h"
+#include "GL3D/mesh.h"
+#include "GL3D/render_buffer.h"
+#include "GL3D/shader.h"
+#include "GL3D/texture.h"
 #include "font.h"
 
 #define STRINGIFY(x) #x
@@ -76,9 +76,9 @@ int main() {
 	};
 
 
-	Mesh quad_mesh{ quad_vertices, {3,2}, quad_indices };
+	GL3D::Mesh quad_mesh{ quad_vertices, {3,2}, quad_indices };
 
-	ShaderProgram font_shader{ asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl" };
+	GL3D::ShaderProgram font_shader{ asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl" };
 
 	// render loop
 	// -----------

@@ -11,17 +11,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Texture.h"
-#include "Mesh.h"
-#include "Shader.h"
+#include "GL3D/Texture.h"
+#include "GL3D/Mesh.h"
+#include "GL3D/Shader.h"
 
 struct FontFace {
-	Texture face_texture{};
+	GL3D::Texture face_texture{};
 	FT_Vector face_advance{};
 	FT_Int face_bitmap_top{};
 	FT_Int face_bitmap_left{};
 	FontFace(FT_GlyphSlot& ft_glyph) : face_advance(ft_glyph->advance), face_bitmap_left(ft_glyph->bitmap_left), face_bitmap_top(ft_glyph->bitmap_top) {
-		TextureSpec font_tex_spec{};
+		GL3D::TextureSpec font_tex_spec{};
 		font_tex_spec.internal_texture_format = GL_RED;
 		font_tex_spec.texture_format = GL_RED;
 		font_tex_spec.generate_mipmap = false;
@@ -56,7 +56,7 @@ struct Font {
 	}
 };
 
-void render_text(const std::string& text, Font& font, ShaderProgram& FontShader, float current_screen_width, float current_screen_height, float x, float y, float font_scale)
+void render_text(const std::string& text, Font& font, GL3D::ShaderProgram& FontShader, float current_screen_width, float current_screen_height, float x, float y, float font_scale)
 {
 	for (auto c = text.begin(); c != text.end(); c++)
 	{
@@ -90,7 +90,7 @@ void render_text(const std::string& text, Font& font, ShaderProgram& FontShader,
 			{ { xpos + w, ypos + h,0.0 },{ 1.0f, 0.0f } }
 		};
 		std::vector<unsigned int> indices{ 0,1,2,3,4,5 };
-		Mesh font_mesh{ vertices,{ 3,2 }, indices };
+		GL3D::Mesh font_mesh{ vertices,{ 3,2 }, indices };
 		font_mesh.draw(FontShader);
 		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 		x += ((int)advance >> 6) * font_scale; // bitshift by 6 to get value in pixels (2^6 = 64)
