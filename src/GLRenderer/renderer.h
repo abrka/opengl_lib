@@ -57,10 +57,10 @@ namespace GLRenderer {
 			ImGui::ShowDemoWindow(); // Show demo window! :)
 			static float font_scale{ 1 };
 			static float font_pos[2] = { 0,0 };
-			// ImGui::Begin("Font");
-			// ImGui::SliderFloat("font scale", &font_scale, 1, 100);
-			// ImGui::SliderFloat2("font pos", font_pos, 0, 800);
-			// ImGui::End();
+			ImGui::Begin("Font");
+			ImGui::SliderFloat("font scale", &font_scale, 1, 100);
+			ImGui::SliderFloat2("font pos", font_pos, 0, 800);
+			ImGui::End();
 
 			glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
 			glEnable(GL_DEPTH_TEST);
@@ -73,7 +73,7 @@ namespace GLRenderer {
 			float x = font_pos[0];
 			float y = font_pos[1];
 
-			render_text(text, *font, *font_shader, screen_width, screen_height, x, y, font_scale);
+			// render_text(text, *font, *font_shader, screen_width, screen_height, x, y, font_scale);
 
 			imgui_frame_end();
 		}
