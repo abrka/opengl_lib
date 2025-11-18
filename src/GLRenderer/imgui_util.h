@@ -35,7 +35,8 @@ void imgui_frame_init()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-	ImGui::DockSpaceOverViewport(0,ImGuiDockNodeFlags_PassthruCentralNode);
+	// ImGui::DockSpaceOverViewport();
+	ImGui::DockSpaceOverViewport(0, 0, ImGuiDockNodeFlags_PassthruCentralNode);
 }
 
 void imgui_frame_end()
