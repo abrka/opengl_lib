@@ -4,22 +4,22 @@
 #include "stb_image.h"
 #include <iostream>
 
-class stbiImage {
+class StbiImage {
 public:
 	int width;
 	int height;
-	int nrOfChannels;
-	unsigned char* ImageData;
+	int num_channels;
+	unsigned char* data;
 
-	stbiImage(const std::filesystem::path path) {
-		ImageData = stbi_load(path.string().c_str(), &width, &height, &nrOfChannels, 0);
-		if (not ImageData) {
+	StbiImage(const std::filesystem::path path) {
+		data = stbi_load(path.string().c_str(), &width, &height, &num_channels, 0);
+		if (not data) {
 			std::cout << "failed to load image data the path was " << path << std::endl;
 			assert(false && "failed to load image data");
 		}
 	}
-	~stbiImage() {
-		stbi_image_free(ImageData);
+	~StbiImage() {
+		stbi_image_free(data);
 	}
 	
 };

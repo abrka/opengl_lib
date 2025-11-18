@@ -1,20 +1,20 @@
 #pragma once
 #include "glad/glad.h"
 
-class GlRenderBuffer {
+class RenderBuffer {
 public:
-	unsigned int ID{};
+	unsigned int id{};
 
-	GlRenderBuffer(GLenum InternalFormat, unsigned int width, unsigned int height) {
-		glGenRenderbuffers(1, &ID);
-		glBindRenderbuffer(GL_RENDERBUFFER, ID);
+	RenderBuffer(GLenum InternalFormat, unsigned int width, unsigned int height) {
+		glGenRenderbuffers(1, &id);
+		glBindRenderbuffer(GL_RENDERBUFFER, id);
 		glRenderbufferStorage(GL_RENDERBUFFER, InternalFormat, width, height);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0); // 0
 	}
-	void Bind() const{
-		glBindRenderbuffer(GL_RENDERBUFFER, ID);
+	void bind() const{
+		glBindRenderbuffer(GL_RENDERBUFFER, id);
 	}
-	void Unbind() const {
+	void unbind() const {
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 };

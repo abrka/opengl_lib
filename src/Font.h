@@ -15,28 +15,28 @@
 #include "Mesh.h"
 #include "Shader.h"
 
-struct GlFontFace {
-	GlTexture face_texture{};
+struct FontFace {
+	Texture face_texture{};
 	FT_Vector face_advance{};
 	FT_Int face_bitmap_top{};
 	FT_Int face_bitmap_left{};
-	GlFontFace(FT_GlyphSlot& ft_glyph) : face_advance(ft_glyph->advance), face_bitmap_left(ft_glyph->bitmap_left), face_bitmap_top(ft_glyph->bitmap_top) {
+	FontFace(FT_GlyphSlot& ft_glyph) : face_advance(ft_glyph->advance), face_bitmap_left(ft_glyph->bitmap_left), face_bitmap_top(ft_glyph->bitmap_top) {
 		TextureSpec font_tex_spec{};
-		font_tex_spec.InternalTexFormat = GL_RED;
-		font_tex_spec.TextureFormat = GL_RED;
-		font_tex_spec.GenerateMipmap = false;
-		font_tex_spec.WrapMode = GL_CLAMP_TO_BORDER;
-		font_tex_spec.FilterType = GL_NEAREST;
+		font_tex_spec.internal_texture_format = GL_RED;
+		font_tex_spec.texture_format = GL_RED;
+		font_tex_spec.generate_mipmap = false;
+		font_tex_spec.wrap_mode = GL_CLAMP_TO_BORDER;
+		font_tex_spec.filter_type = GL_NEAREST;
 		FT_Bitmap* ft_bitmap = &ft_glyph->bitmap;
-		face_texture.LoadTexture(ft_bitmap->width, ft_bitmap->rows, ft_bitmap->buffer, font_tex_spec);
+		face_texture.load(ft_bitmap->width, ft_bitmap->rows, ft_bitmap->buffer, font_tex_spec);
 	}
 };
 
 
-struct GlFont {
-	std::map<FT_ULong, GlFontFace> charcode_to_face_map{};
+struct Font {
+	std::map<FT_ULong, FontFace> charcode_to_face_map{};
 
-	GlFont(FT_Library* ft_library, const std::string& font_file_path, FT_UInt font_height) {
+	Font(FT_Library* ft_library, const std::string& font_file_path, FT_UInt font_height) {
 		FT_Face ft_face{};
 		FT_Error err = FT_New_Face(*ft_library, font_file_path.c_str(), 0, &ft_face);
 		assert(err == 0);
@@ -48,7 +48,7 @@ struct GlFont {
 		{
 			err = FT_Load_Char(ft_face, c, FT_LOAD_RENDER);
 			assert(err == 0);
-			charcode_to_face_map.insert({ c, GlFontFace(ft_face->glyph) });
+			charcode_to_face_map.insert({ c, FontFace(ft_face->glyph) });
 		}
 
 
@@ -56,14 +56,14 @@ struct GlFont {
 	}
 };
 
-void RenderText(const std::string& text, GlFont& font, GlShaderProgram& FontShader, float current_screen_width, float current_screen_height, float x, float y, float font_scale)
+void render_text(const std::string& text, Font& font, ShaderProgram& FontShader, float current_screen_width, float current_screen_height, float x, float y, float font_scale)
 {
 	for (auto c = text.begin(); c != text.end(); c++)
 	{
-		GlFontFace& font_face = font.charcode_to_face_map.at(*c);
-		FontShader.SetTexture("font_texture", font_face.face_texture, 0);
+		FontFace& font_face = font.charcode_to_face_map.at(*c);
+		FontShader.set_texture("font_texture", font_face.face_texture, 0);
 		glm::mat4 projection = glm::ortho(0.0f, (float)current_screen_width, 0.0f, (float)current_screen_height);
-		FontShader.SetUniform("matrix", projection);
+		FontShader.set_uniform("matrix", projection);
 
 		float advance = font_face.face_advance.x;
 		float bearing_x = font_face.face_bitmap_left;
@@ -90,8 +90,8 @@ void RenderText(const std::string& text, GlFont& font, GlShaderProgram& FontShad
 			{ { xpos + w, ypos + h,0.0 },{ 1.0f, 0.0f } }
 		};
 		std::vector<unsigned int> indices{ 0,1,2,3,4,5 };
-		GlMesh font_mesh{ vertices,{ 3,2 }, indices };
-		font_mesh.Draw(FontShader);
+		Mesh font_mesh{ vertices,{ 3,2 }, indices };
+		font_mesh.draw(FontShader);
 		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 		x += ((int)advance >> 6) * font_scale; // bitshift by 6 to get value in pixels (2^6 = 64)
 	}

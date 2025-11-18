@@ -9,67 +9,68 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Texture.h"
 
-class GlShaderProgram {
+class ShaderProgram {
 
 public:
-	unsigned int ID{ 0 };
+	unsigned int id{ 0 };
 
-	GlShaderProgram(const std::string& FragPath, const std::string& VertexPath) {
+	ShaderProgram(const std::string& frag_path, const std::string& vertex_path) {
 
-		std::ifstream VertexFile{ VertexPath };
+		std::ifstream vertex_file{ vertex_path };
 
-		if (not VertexFile.is_open()) {
-			std::cout << "couldnt open vertex file from shader program " <<ID<< "the path was "<< VertexPath;
+		if (not vertex_file.is_open()) {
+			std::cout << "couldnt open vertex file from shader program " <<id<< "the path was "<< vertex_path;
 			return;
 		}
 
-		std::stringstream VertexStream;
-		VertexStream << VertexFile.rdbuf();
-		std::string VertexSrc = VertexStream.str();
-		const char* VertexSrcCStr = VertexSrc.c_str();
+		std::stringstream vertex_stream;
+		vertex_stream << vertex_file.rdbuf();
+		std::string vertex_src = vertex_stream.str();
+		const char* vertex_src_c_str = vertex_src.c_str();
 
-		unsigned int VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(VertexShaderID, 1, &VertexSrcCStr, NULL);
-		glCompileShader(VertexShaderID);
-		PrintShaderCompileErrors(VertexShaderID);
+		unsigned int vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertex_shader_id, 1, &vertex_src_c_str, NULL);
+		glCompileShader(vertex_shader_id);
+		print_shader_compile_error(vertex_shader_id);
 
 
-		std::ifstream FragFile{ FragPath };
+		std::ifstream frag_file{ frag_path };
 
-		if (not VertexFile.is_open()) {
-			std::cout << "couldnt open fragment file from shader program " << ID << "the path was " << FragPath;
+		if (not frag_file.is_open()) {
+			std::cout << "couldnt open fragment file from shader program " << id << "the path was " << frag_path;
 			return;
 		}
 
-		std::stringstream FragStream;
-		FragStream << FragFile.rdbuf();
-		std::string FragSrc = FragStream.str();
-		const char* FragSrcCStr = FragSrc.c_str();
+		std::stringstream frag_stream;
+		frag_stream << frag_file.rdbuf();
+		std::string frag_src = frag_stream.str();
+		const char* frag_src_c_str = frag_src.c_str();
 
-		unsigned int FragShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(FragShaderID, 1, &FragSrcCStr, NULL);
-		glCompileShader(FragShaderID);
-		PrintShaderCompileErrors(FragShaderID);
+		unsigned int frag_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(frag_shader_id, 1, &frag_src_c_str, NULL);
+		glCompileShader(frag_shader_id);
+		print_shader_compile_error(frag_shader_id);
 
 
-		ID = glCreateProgram();
-		glAttachShader(ID, VertexShaderID);
-		glAttachShader(ID, FragShaderID);
-		glLinkProgram(ID);
-		PrintShaderProgramLinkErrors(ID);
-		glDeleteShader(VertexShaderID);
-		glDeleteShader(FragShaderID);
+		id = glCreateProgram();
+		glAttachShader(id, vertex_shader_id);
+		glAttachShader(id, frag_shader_id);
+		glLinkProgram(id);
+		print_shader_program_link_error(id);
+		glDeleteShader(vertex_shader_id);
+		glDeleteShader(frag_shader_id);
 	}
 
 
-	void Bind() const {
-		glUseProgram(ID);
+	void bind() const {
+		glUseProgram(id);
 	}
-	void Unbind() const {
+	void unbind() const {
 		glUseProgram(0);
 	}
 
-	static void PrintShaderCompileErrors(unsigned int ShaderID) {
+private:
+	static void print_shader_compile_error(unsigned int ShaderID) {
 		int  success;
 		char infoLog[512];
 		glGetShaderiv(ShaderID, GL_COMPILE_STATUS, &success);
@@ -81,7 +82,7 @@ public:
 	}
 
 
-	static void PrintShaderProgramLinkErrors(unsigned int ShaderProgramID){
+	static void print_shader_program_link_error(unsigned int ShaderProgramID){
 		int  success;
 		char infoLog[512];
 		glGetProgramiv(ShaderProgramID, GL_LINK_STATUS, &success);
@@ -92,39 +93,39 @@ public:
 	}
 
 
-
+public:
 
 	template<typename T>
-	void SetUniform(const std::string& uniformName, T val) {
-		Bind();
-		int uniformLocation = glGetUniformLocation(ID, uniformName.c_str());
+	void set_uniform(const std::string& uniformName, T val) {
+		bind();
+		int uniformLocation = glGetUniformLocation(id, uniformName.c_str());
 		if (uniformLocation == -1) {
 			std::cerr << "the uniform youre setting: " << uniformName << " does not exist/it is the wrong type/ it is not used by all shaders/it was discarded by the shader compiler because it is unused\n";
 		}
-		setShaderUniformFromLocation(ID, uniformLocation, val);
+		set_shader_uniform_from_location(id, uniformLocation, val);
 	}
-	void SetTexture(const std::string& uniformName, const GlTexture& tex, unsigned int textureUnit) {
-		tex.Activate(textureUnit);
-		SetUniform(uniformName, (int)textureUnit);
+	void set_texture(const std::string& uniformName, const Texture& tex, unsigned int textureUnit) {
+		tex.activate(textureUnit);
+		set_uniform(uniformName, (int)textureUnit);
 	}
 
-	GlShaderProgram(const GlShaderProgram& rhs) = delete;
-	GlShaderProgram& operator=(const GlShaderProgram& rhs) = delete;
+	ShaderProgram(const ShaderProgram& rhs) = delete;
+	ShaderProgram& operator=(const ShaderProgram& rhs) = delete;
 
 private:
-	void setShaderUniformFromLocation(unsigned int shaderProgram, int uniformLocation, float val) {
+	void set_shader_uniform_from_location(unsigned int shaderProgram, int uniformLocation, float val) {
 		glUniform1f(uniformLocation, val);
 	}
-	void setShaderUniformFromLocation(unsigned int shaderProgram, int uniformLocation, int val) {
+	void set_shader_uniform_from_location(unsigned int shaderProgram, int uniformLocation, int val) {
 		glUniform1i(uniformLocation, val);
 	}
-	void setShaderUniformFromLocation(unsigned int shaderProgram, int uniformLocation, glm::mat4 val) {
+	void set_shader_uniform_from_location(unsigned int shaderProgram, int uniformLocation, glm::mat4 val) {
 		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(val));
 	}
-	void setShaderUniformFromLocation(unsigned int shaderProgram, int uniformLocation, glm::mat3 val) {
+	void set_shader_uniform_from_location(unsigned int shaderProgram, int uniformLocation, glm::mat3 val) {
 		glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(val));
 	}
-	void setShaderUniformFromLocation(unsigned int shaderProgram, int uniformLocation, glm::vec3 val) {
+	void set_shader_uniform_from_location(unsigned int shaderProgram, int uniformLocation, glm::vec3 val) {
 		glUniform3f(uniformLocation, val.x, val.y, val.z);
 	}
 

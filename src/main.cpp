@@ -5,9 +5,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 
 #include "GladUtil.h"
 #include "GlfwUtil.h"
@@ -45,22 +42,22 @@ int main() {
 
 
 
-	GLFWwindow* window = GlfwInit(initial_screen_width, initial_screen_height);
+	GLFWwindow* window = glfw_init(initial_screen_width, initial_screen_height);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetKeyCallback(window, key_callback);
 
-	GladInit();
-	EnableGlDebug();
+	glad_init();
+	enable_gl_debug();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // this makes sure opengl can use bitmap textures with no alighment
 
-	ImguiInit(window);
+	imgui_init(window);
 
 	FT_Library ft_library{};
 	FT_Error err = FT_Init_FreeType(&ft_library);
 	assert(err == 0);
-	GlFont font{ &ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256 };
+	Font font{ &ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256 };
 	FT_Done_FreeType(ft_library);
 
 
@@ -79,9 +76,9 @@ int main() {
 	};
 
 
-	GlMesh QuadMesh{ quadVertices, {3,2}, quadIndices };
+	Mesh QuadMesh{ quadVertices, {3,2}, quadIndices };
 
-	GlShaderProgram FontShader{ asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl" };
+	ShaderProgram FontShader{ asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl" };
 
 	// render loop
 	// -----------
@@ -93,7 +90,7 @@ int main() {
 		// (Your code calls glfwPollEvents())
 		// ...
 		// Start the Dear ImGui frame
-		ImguiFrameInit();
+		imgui_frame_init();
 		// ImGui::ShowDemoWindow(); // Show demo window! :)
 		static float font_scale{ 1 };
 		static float font_pos[2] = {0,0};
@@ -121,7 +118,7 @@ int main() {
 		const std::string text = "adksdlf";
 		float x = font_pos[0];
 		float y = font_pos[1];
-		RenderText(text, font, FontShader, current_screen_width, current_screen_height, x, y, font_scale);
+		render_text(text, font, FontShader, current_screen_width, current_screen_height, x, y, font_scale);
 
 
 
@@ -132,11 +129,11 @@ int main() {
 
 		// render imgui end
 
-		ImguiFrameEnd();
-		GlfwFrameEnd(window);
+		imgui_frame_end();
+		glfw_frame_end(window);
 	}
-	ImguiEnd();
-	GlfwEnd();
+	imgui_end();
+	glfw_end();
 	return 0;
 }
 

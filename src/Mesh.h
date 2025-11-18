@@ -10,73 +10,73 @@
 
 #include "Shader.h"
 
-class GlMesh {
+class Mesh {
 
 public:
 	size_t indices_size{};
 
-	unsigned int VAO = 0;
-	unsigned int VBO = 0;
-	unsigned int EBO = 0;
+	unsigned int vao = 0;
+	unsigned int vbo = 0;
+	unsigned int ebo = 0;
 
 
 	template<typename VertexType>
-	GlMesh(const std::vector<VertexType>& vertices, const std::vector<int>& numFloatsPerAttr, const std::vector<unsigned int>& indices)
+	Mesh(const std::vector<VertexType>& vertices, const std::vector<int>& num_floats_per_attr, const std::vector<unsigned int>& indices)
 	{
 
 		indices_size = indices.size();
 
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray(VAO);
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
 
-		glGenBuffers(1, &EBO);
+		glGenBuffers(1, &ebo);
 
-		glGenBuffers(1, &VBO);
+		glGenBuffers(1, &vbo);
 
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexType) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
 
-		setVertexAttributes(VAO, VBO, numFloatsPerAttr);
+		set_vertex_attributes(vao, vbo, num_floats_per_attr);
 		glBindVertexArray(0);
 
 	};
 
 	
-	void Draw(const GlShaderProgram& Shader) const {
+	void draw(const ShaderProgram& shader) const {
 
 
-		Shader.Bind();
-		glBindVertexArray(VAO);
+		shader.bind();
+		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, indices_size, GL_UNSIGNED_INT,0 );
 		glBindVertexArray(0);
-		Shader.Unbind();
+		shader.unbind();
 	};
 
-	GlMesh(const GlMesh& rhs) = delete;
-	GlMesh& operator=(const GlMesh& rhs) = delete;
+	Mesh(const Mesh& rhs) = delete;
+	Mesh& operator=(const Mesh& rhs) = delete;
 
-	~GlMesh() {
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &EBO);
+	~Mesh() {
+		glDeleteVertexArrays(1, &vao);
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ebo);
 	}
 
 private:
 	// WARNING: vertex data must be float only
-	void setVertexAttributes(unsigned int VAO, unsigned int VBO, std::vector<int> numDataPerAttr) {
-		glBindVertexArray(VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		int stride = std::accumulate(numDataPerAttr.begin(), numDataPerAttr.end(), 0) * sizeof(float);
+	void set_vertex_attributes(unsigned int vao, unsigned int vbo, std::vector<int> num_floats_per_attr) {
+		glBindVertexArray(vao);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		int stride = std::accumulate(num_floats_per_attr.begin(), num_floats_per_attr.end(), 0) * sizeof(float);
 		int offset = 0;
-		for (int i = 0; i < numDataPerAttr.size(); i++)
+		for (int i = 0; i < num_floats_per_attr.size(); i++)
 		{
-			glVertexAttribPointer(i, numDataPerAttr[i], GL_FLOAT, GL_FALSE, stride, (void*)(offset));
+			glVertexAttribPointer(i, num_floats_per_attr[i], GL_FLOAT, GL_FALSE, stride, (void*)(offset));
 			glEnableVertexAttribArray(i);
-			offset += numDataPerAttr[i] * sizeof(float);
+			offset += num_floats_per_attr[i] * sizeof(float);
 		}
 		glBindVertexArray(0);
 	}

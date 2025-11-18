@@ -2,35 +2,35 @@
 #include "Texture.h"
 #include "Renderbuffer.h"
 
-class GlFramebuffer {
+class FrameBuffer {
 public:
 
-	unsigned int ID{};
+	unsigned int id{};
 
-	GlFramebuffer() {
-		glGenFramebuffers(1, &ID);
+	FrameBuffer() {
+		glGenFramebuffers(1, &id);
 	}
 
-	void AttachTexture(const GlTexture& Tex, const GLenum AttachToWhat, const unsigned int MipmapLevel = 0) {
-		glBindFramebuffer(GL_FRAMEBUFFER, ID);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, AttachToWhat, GL_TEXTURE_2D, Tex.ID, MipmapLevel);
+	void attach_texture(const Texture& Tex, const GLenum AttachToWhat, const unsigned int MipmapLevel = 0) {
+		glBindFramebuffer(GL_FRAMEBUFFER, id);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, AttachToWhat, GL_TEXTURE_2D, Tex.id, MipmapLevel);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-	void AttachRenderBuffer(const GlRenderBuffer& RenderBuffer) {
-		glBindFramebuffer(GL_FRAMEBUFFER, ID);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RenderBuffer.ID);
+	void atttach_render_buffer(const RenderBuffer& RenderBuffer) {
+		glBindFramebuffer(GL_FRAMEBUFFER, id);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RenderBuffer.id);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 	
-	void Bind() const{
-		glBindFramebuffer(GL_FRAMEBUFFER, ID);
+	void bind() const{
+		glBindFramebuffer(GL_FRAMEBUFFER, id);
 	}
 
-	void Unbind() const{
+	void unbind() const{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	bool CheckStatus() const {
+	bool check_status() const {
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 			std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 			return false;

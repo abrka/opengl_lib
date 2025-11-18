@@ -6,7 +6,7 @@ void glfw_error_callback(int error, const char* description) {
 	fprintf(stderr, "[GLFW ERROR] %d: %s\n", error, description);
 }
 
-GLFWwindow* GlfwInit(int screen_width, int screen_height) {
+GLFWwindow* glfw_init(int screen_width, int screen_height) {
 	glfwSetErrorCallback(glfw_error_callback);
 	// glfw: initialize and configure
 	// ------------------------------
@@ -33,7 +33,7 @@ GLFWwindow* GlfwInit(int screen_width, int screen_height) {
 	glfwMakeContextCurrent(window);
 	return window;
 }
-void GlfwFrameEnd(GLFWwindow* window)
+void glfw_frame_end(GLFWwindow* window)
 {
 	// (Your code calls glfwSwapBuffers() etc.)
 
@@ -45,7 +45,7 @@ void GlfwFrameEnd(GLFWwindow* window)
 }
 
 
-void GlfwEnd()
+void glfw_end()
 {
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	// ------------------------------------------------------------------

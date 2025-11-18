@@ -4,7 +4,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-void ImguiInit(GLFWwindow* window)
+void imgui_init(GLFWwindow* window)
 {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -23,14 +23,14 @@ void ImguiInit(GLFWwindow* window)
 	ImGui_ImplOpenGL3_Init();
 }
 
-void ImguiEnd()
+void imgui_end()
 {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
 
-void ImguiFrameInit()
+void imgui_frame_init()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
@@ -38,7 +38,7 @@ void ImguiFrameInit()
 	ImGui::DockSpaceOverViewport(0,ImGuiDockNodeFlags_PassthruCentralNode);
 }
 
-void ImguiFrameEnd()
+void imgui_frame_end()
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

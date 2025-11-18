@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 
 
-void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id,
+void APIENTRY gl_debug_output(GLenum source, GLenum type, unsigned int id,
 	GLenum severity, GLsizei length,
 	const char* message, const void* userParam) {
 	// ignore non-significant error/warning codes
@@ -86,7 +86,7 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, unsigned int id,
 
 }
 
-void EnableGlDebug()
+void enable_gl_debug()
 {
 	int flags;
 	glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
@@ -95,7 +95,7 @@ void EnableGlDebug()
 	if (is_opengl_debug_supported) {
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(glDebugOutput, nullptr);
+		glDebugMessageCallback(gl_debug_output, nullptr);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr,
 			GL_TRUE);
 	}
