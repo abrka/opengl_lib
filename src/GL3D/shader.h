@@ -62,6 +62,14 @@ namespace GL3D {
 			glDeleteShader(frag_shader_id);
 		}
 
+		ShaderProgram(const ShaderProgram& rhs) = delete;
+		ShaderProgram& operator=(const ShaderProgram& rhs) = delete;
+
+		~ShaderProgram()
+		{
+			glUseProgram(0);
+			glDeleteProgram(id);
+		}
 
 		void bind() const {
 			glUseProgram(id);
@@ -110,8 +118,6 @@ namespace GL3D {
 			set_uniform(uniformName, (int)textureUnit);
 		}
 
-		ShaderProgram(const ShaderProgram& rhs) = delete;
-		ShaderProgram& operator=(const ShaderProgram& rhs) = delete;
 
 	private:
 		void set_shader_uniform_from_location(unsigned int shaderProgram, int uniformLocation, float val) {

@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <cassert>
+#include <memory>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -16,7 +17,7 @@
 #include "GL3D/Shader.h"
 
 struct FontFace {
-	GL3D::Texture face_texture{};
+	std::unique_ptr<GL3D::Texture> face_texture{};
 	FT_Vector face_advance{};
 	FT_Int face_bitmap_top{};
 	FT_Int face_bitmap_left{};
@@ -28,7 +29,7 @@ struct FontFace {
 		font_tex_spec.wrap_mode = GL_CLAMP_TO_BORDER;
 		font_tex_spec.filter_type = GL_NEAREST;
 		FT_Bitmap* ft_bitmap = &ft_glyph->bitmap;
-		face_texture.load(ft_bitmap->width, ft_bitmap->rows, ft_bitmap->buffer, font_tex_spec);
+		face_texture = std::make_unique<GL3D::Texture>(ft_bitmap->width, ft_bitmap->rows, ft_bitmap->buffer, font_tex_spec);
 	}
 };
 
@@ -61,15 +62,15 @@ void render_text(const std::string& text, Font& font, GL3D::ShaderProgram& FontS
 	for (auto c = text.begin(); c != text.end(); c++)
 	{
 		FontFace& font_face = font.charcode_to_face_map.at(*c);
-		FontShader.set_texture("font_texture", font_face.face_texture, 0);
+		FontShader.set_texture("font_texture", *font_face.face_texture, 0);
 		glm::mat4 projection = glm::ortho(0.0f, (float)current_screen_width, 0.0f, (float)current_screen_height);
 		FontShader.set_uniform("matrix", projection);
 
 		float advance = font_face.face_advance.x;
 		float bearing_x = font_face.face_bitmap_left;
 		float bearing_y = font_face.face_bitmap_top;
-		float size_x = font_face.face_texture.width;
-		float size_y = font_face.face_texture.height;
+		float size_x = font_face.face_texture->width;
+		float size_y = font_face.face_texture->height;
 
 		float xpos = x + bearing_x * font_scale;
 		float ypos = y - (size_y - bearing_y) * font_scale;

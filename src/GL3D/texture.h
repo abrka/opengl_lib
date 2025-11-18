@@ -23,13 +23,9 @@ namespace GL3D {
 		unsigned int height{};
 		TextureSpec texture_spec{};
 
-		void load(unsigned int _width, unsigned int _height, unsigned char* _texture_data, TextureSpec _tex_spec) {
+		Texture(unsigned int _width, unsigned int _height, unsigned char* _texture_data, TextureSpec _tex_spec) : width(_width), height(_height), texture_spec(_tex_spec) {
 
 			assert(_texture_data);
-
-			width = _width;
-			height = _height;
-			texture_spec = _tex_spec;
 
 			glGenTextures(1, &id);
 			glBindTexture(GL_TEXTURE_2D, id);
@@ -47,6 +43,14 @@ namespace GL3D {
 				glGenerateMipmap(GL_TEXTURE_2D);
 			}
 
+		}
+
+		Texture(const Texture& rhs) = delete;
+		Texture& operator=(const Texture& rhs) = delete;
+
+		~Texture()
+		{
+			glDeleteTextures(1, &id);
 		}
 
 		void bind() const {

@@ -46,6 +46,14 @@ namespace GL3D {
 
 		};
 
+		Mesh(const Mesh& rhs) = delete;
+		Mesh& operator=(const Mesh& rhs) = delete;
+
+		~Mesh() {
+			glDeleteVertexArrays(1, &vao);
+			glDeleteBuffers(1, &vbo);
+			glDeleteBuffers(1, &ebo);
+		}
 
 		void draw(const ShaderProgram& shader) const {
 
@@ -57,14 +65,7 @@ namespace GL3D {
 			shader.unbind();
 		};
 
-		Mesh(const Mesh& rhs) = delete;
-		Mesh& operator=(const Mesh& rhs) = delete;
 
-		~Mesh() {
-			glDeleteVertexArrays(1, &vao);
-			glDeleteBuffers(1, &vbo);
-			glDeleteBuffers(1, &ebo);
-		}
 
 	private:
 		// WARNING: vertex data must be float only
