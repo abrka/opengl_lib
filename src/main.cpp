@@ -11,9 +11,7 @@
 #include "opengl_util.h"
 #include "imgui_util.h"
 
-#include "GL3D/frame_buffer.h"
 #include "GL3D/mesh.h"
-#include "GL3D/render_buffer.h"
 #include "GL3D/shader.h"
 #include "GL3D/texture.h"
 #include "font.h"
