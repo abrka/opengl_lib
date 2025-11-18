@@ -25,7 +25,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void key_callback(GLFWwindow* window, int key, int scancode, int action,
 	int mods);
-void processInput(GLFWwindow* window);
+void process_input(GLFWwindow* window);
 
 
 // settings
@@ -34,7 +34,7 @@ const unsigned int initial_screen_height = 800;
 
 static unsigned int current_screen_width = initial_screen_width;
 static unsigned int current_screen_height = initial_screen_height;
-static bool CursorEnabled = false;
+static bool cursor_enabled = false;
 
 const std::string asset_dir = std::string(TOSTRING(ASSET_DIR)) + "/";
 
@@ -65,30 +65,29 @@ int main() {
 		glm::vec3 position{};
 		glm::vec2 texCoord{};
 	};
-	std::vector<Vertex2> quadVertices{
+	std::vector<Vertex2> quad_vertices{
 		{{-0.5, 0.5,0.0}, {0.0,1.0}},
 		{{ 0.5, 0.5,0.0}, {1.0,1.0}},
 		{{ 0.5,-0.5,0.0}, {1.0,0.0}},
 		{{-0.5,-0.5,0.0}, {0.0,0.0}},
 	};
-	std::vector<unsigned int> quadIndices{
+	std::vector<unsigned int> quad_indices{
 		0,1,3,1,2,3
 	};
 
 
-	Mesh QuadMesh{ quadVertices, {3,2}, quadIndices };
+	Mesh quad_mesh{ quad_vertices, {3,2}, quad_indices };
 
-	ShaderProgram FontShader{ asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl" };
+	ShaderProgram font_shader{ asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl" };
 
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window)) {
 		// input
 		// -----
-		processInput(window);
+		process_input(window);
 
 		// (Your code calls glfwPollEvents())
-		// ...
 		// Start the Dear ImGui frame
 		imgui_frame_init();
 		// ImGui::ShowDemoWindow(); // Show demo window! :)
@@ -101,8 +100,6 @@ int main() {
 		// render
 		// ------
 
-
-
 		glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -110,24 +107,10 @@ int main() {
 		glEnable(GL_BLEND); // enable blending function
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
-
-
-
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render both front and back faces as lines
 		const std::string text = "adksdlf";
 		float x = font_pos[0];
 		float y = font_pos[1];
-		render_text(text, font, FontShader, current_screen_width, current_screen_height, x, y, font_scale);
-
-
-
-		// Rendering
-		// (Your code clears your framebuffer, renders your other stuff etc.)
-
-		// render imgui here 
-
-		// render imgui end
+		render_text(text, font, font_shader, current_screen_width, current_screen_height, x, y, font_scale);
 
 		imgui_frame_end();
 		glfw_frame_end(window);
@@ -144,13 +127,13 @@ int main() {
 void key_callback(GLFWwindow* window, int key, int scancode, int action,
 	int mods) {
 	if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS) {
-		if (CursorEnabled) {
+		if (cursor_enabled) {
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			CursorEnabled = false;
+			cursor_enabled = false;
 		}
 		else {
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			CursorEnabled = true;
+			cursor_enabled = true;
 		}
 	}
 }
@@ -158,7 +141,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action,
 // process all input: query GLFW whether relevant keys are pressed/released this
 // frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window) {
+void process_input(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
