@@ -49,6 +49,7 @@ namespace GLRenderer {
 			FT_Error err = FT_Init_FreeType(&ft_library);
 			assert(err == 0);
 			font = std::make_unique<Font>(& ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256 );
+			FT_Done_FreeType(ft_library);
 		}
 
 		void render(int screen_width, int screen_height) {
