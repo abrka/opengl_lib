@@ -3,7 +3,7 @@ project(opengl_ui_proj)
 
 file(GLOB OPENGL_SOURCES src/*.h src/*.cpp)
 add_executable(opengl_ui ${OPENGL_SOURCES})
-target_compile_features(opengl_ui PUBLIC cxx_std_23)
+target_compile_features(opengl_ui PUBLIC cxx_std_20)
 target_include_directories(opengl_ui PUBLIC src)
 
 target_compile_definitions(opengl_ui PRIVATE ASSET_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data)
@@ -13,6 +13,10 @@ set(OPENGL_VERSION_MINOR "6" CACHE STRING "OpenGL Version Minor")
 
 target_compile_definitions(opengl_ui PRIVATE OPENGL_VERSION_MAJOR=${OPENGL_VERSION_MAJOR})
 target_compile_definitions(opengl_ui PRIVATE OPENGL_VERSION_MINOR=${OPENGL_VERSION_MINOR})
+
+# Add expected 
+add_subdirectory(external/expected)
+target_link_libraries(opengl_ui PUBLIC tl::expected)
 
 # Build glad 
 add_library(glad external/glad/src/glad.c external/glad/include/glad/glad.h external/glad/include/KHR/khrplatform.h)
