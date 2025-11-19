@@ -3,8 +3,7 @@
 #include <iostream>
 
 #include "GLRenderer/renderer.h"
-#include "glfw_util.h"
-
+#include "glfw_window_raii.h"
 
 
 #define STRINGIFY(x) #x
@@ -12,11 +11,9 @@
 
 
 namespace GLApp {
-	
-
 	class Application
 	{
-		GLFWwindow* window{};
+		std::shared_ptr<Window> window{};
 		std::unique_ptr<GLRenderer::Renderer> renderer{};
 
 	private:
@@ -24,24 +21,20 @@ namespace GLApp {
 			glViewport(0, 0, width, height);
 		}
 	public:
-		Application(int initial_screen_width, int initial_screen_height) {
-			window = glfw_init(initial_screen_width, initial_screen_height);
-			// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+		Application(int initial_screen_width, int initial_screen_height, int opengl_version_major, int opengl_version_minor) {
+			window = std::make_shared<Window>(initial_screen_width, initial_screen_height, opengl_version_major, opengl_version_minor);
+			glfwSetFramebufferSizeCallback(window->glfw_window, framebuffer_size_callback);
 			renderer = std::make_unique<GLRenderer::Renderer>(window);
 		}
-		~Application()
-		{
-			imgui_end();
-			glfw_end();
-		}
+		Application(const Application&) = delete;           
+		Application& operator=(const Application& rhs) = delete;
 		void run() {
-			while (!glfwWindowShouldClose(window)) {
+			while (!glfwWindowShouldClose(window->glfw_window)) {
 				int width{};
 				int height{};
-				glfwGetWindowSize(window, &width, &height);
-				renderer->render(width,height);
-				glfw_frame_end(window);
+				glfwGetWindowSize(window->glfw_window, &width, &height);
+				renderer->render(width, height);
+				glfw_frame_end(window->glfw_window);
 			}
 		}
 	};

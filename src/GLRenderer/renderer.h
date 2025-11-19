@@ -2,7 +2,7 @@
 
 #include "GL3D/mesh.h"
 #include "GL3D/shader.h"
-
+#include "GLApp/glfw_window_raii.h"
 
 #include "glad_util.h"
 #include "imgui_util.h"
@@ -17,15 +17,17 @@ namespace GLRenderer {
 
 	class Renderer
 	{
-		const std::string asset_dir = std::string(TOSTRING(ASSET_DIR)) + "/";
+		std::shared_ptr<GLApp::Window> window{};
+		std::unique_ptr<GL3D::Mesh> mesh{};
+		std::unique_ptr<GL3D::ShaderProgram> debug_shader{};
 		std::unique_ptr<Font> font{};
 		std::unique_ptr<GL3D::ShaderProgram> font_shader{};
 
 	public:
-		Renderer(GLFWwindow* window) {
+		Renderer(std::shared_ptr<GLApp::Window> window): window(window) {
 			glad_init();
 			enable_gl_debug();
-			imgui_init(window);
+			imgui_init(window->glfw_window);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // this makes sure opengl can use bitmap textures with no alighment
 
 			struct Vertex2 {
@@ -41,17 +43,27 @@ namespace GLRenderer {
 			std::vector<unsigned int> quad_indices{
 				0,1,3,1,2,3
 			};
-			GL3D::Mesh quad_mesh{ quad_vertices, {3,2}, quad_indices };
+			mesh = std::make_unique<GL3D::Mesh>(quad_vertices, std::vector{ 3,2 }, quad_indices);
 			
-			font_shader = std::make_unique<GL3D::ShaderProgram>( asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl" );
+			const std::string asset_dir = std::string(TOSTRING(ASSET_DIR)) + "/";
+			debug_shader = std::make_unique<GL3D::ShaderProgram>(asset_dir + "shaders/debug_frag.glsl", asset_dir + "shaders/debug_vertex.glsl");
+			
+			
+			font_shader = std::make_unique<GL3D::ShaderProgram>(asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl");
 			
 			FT_Library ft_library{};
 			FT_Error err = FT_Init_FreeType(&ft_library);
 			assert(err == 0);
-			font = std::make_unique<Font>(& ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256 );
+			font = std::make_unique<Font>(&ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256);
 			FT_Done_FreeType(ft_library);
 		}
 
+		Renderer(const Renderer&) = delete;
+		Renderer& operator=(const Renderer& rhs) = delete;
+
+		~Renderer() {
+			imgui_destroy();
+		}
 		void render(int screen_width, int screen_height) {
 			imgui_frame_init();
 
@@ -74,7 +86,9 @@ namespace GLRenderer {
 			float x = font_pos[0];
 			float y = font_pos[1];
 
-			// render_text(text, *font, *font_shader, screen_width, screen_height, x, y, font_scale);
+
+			mesh->draw(*debug_shader);
+			render_text(text, *font, *font_shader, screen_width, screen_height, x, y, font_scale);
 
 			imgui_frame_end();
 		}
