@@ -2,12 +2,16 @@
 
 #include "GL3D/mesh.h"
 #include "GL3D/shader.h"
+
+
+
 #include "GLApp/glfw_window_raii.h"
 
 #include "glad_util.h"
 #include "imgui_util.h"
 #include "opengl_util.h"
 
+#include "shader_builder.h"
 #include "font.h"
 
 #define STRINGIFY(x) #x
@@ -46,10 +50,10 @@ namespace GLRenderer {
 			mesh = std::make_unique<GL3D::Mesh>(quad_vertices, std::vector{ 3,2 }, quad_indices);
 			
 			const std::string asset_dir = std::string(TOSTRING(ASSET_DIR)) + "/";
-			debug_shader = std::make_unique<GL3D::ShaderProgram>(asset_dir + "shaders/debug_frag.glsl", asset_dir + "shaders/debug_vertex.glsl");
+			debug_shader = ShaderBuilder::build(asset_dir + "shaders/debug_frag.glsl", asset_dir + "shaders/debug_vertex.glsl").value();
 			
 			
-			font_shader = std::make_unique<GL3D::ShaderProgram>(asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl");
+			font_shader = ShaderBuilder::build(asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl").value();
 			
 			FT_Library ft_library{};
 			FT_Error err = FT_Init_FreeType(&ft_library);

@@ -3,7 +3,7 @@ project(opengl_ui_proj)
 
 file(GLOB OPENGL_SOURCES src/*.h src/*.cpp)
 add_executable(opengl_ui ${OPENGL_SOURCES})
-set_property(TARGET opengl_ui PROPERTY CXX_STANDARD 20)
+set_property(TARGET opengl_ui PROPERTY CXX_STANDARD 23)
 target_include_directories(opengl_ui PUBLIC src)
 target_compile_definitions(opengl_ui PRIVATE ASSET_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data)
 

@@ -1,8 +1,6 @@
 #pragma once
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <sstream>
+
+#include <string_view>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,42 +12,20 @@ namespace GL3D {
 	class ShaderProgram {
 
 	public:
-		unsigned int id{ 0 };
+		unsigned int id{};
 
-		ShaderProgram(const std::string& frag_path, const std::string& vertex_path) {
-
-			std::ifstream vertex_file{ vertex_path };
-
-			if (not vertex_file.is_open()) {
-				std::cout << "couldnt open vertex file from shader program " << id << "the path was " << vertex_path;
-				return;
-			}
-
-			std::stringstream vertex_stream;
-			vertex_stream << vertex_file.rdbuf();
-			std::string vertex_src = vertex_stream.str();
-			const char* vertex_src_c_str = vertex_src.c_str();
-
+		ShaderProgram(const std::string& frag_shader_str, const std::string& vertex_shader_str) {
+			
+			const char* vertex_shader_c_str = vertex_shader_str.c_str();
 			unsigned int vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
-			glShaderSource(vertex_shader_id, 1, &vertex_src_c_str, NULL);
+			glShaderSource(vertex_shader_id, 1, &vertex_shader_c_str, NULL);
 			glCompileShader(vertex_shader_id);
 			print_shader_compile_error(vertex_shader_id);
 
 
-			std::ifstream frag_file{ frag_path };
-
-			if (not frag_file.is_open()) {
-				std::cout << "couldnt open fragment file from shader program " << id << "the path was " << frag_path;
-				return;
-			}
-
-			std::stringstream frag_stream;
-			frag_stream << frag_file.rdbuf();
-			std::string frag_src = frag_stream.str();
-			const char* frag_src_c_str = frag_src.c_str();
-
+			const char* frag_shader_c_str = frag_shader_str.c_str();
 			unsigned int frag_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(frag_shader_id, 1, &frag_src_c_str, NULL);
+			glShaderSource(frag_shader_id, 1, &frag_shader_c_str, NULL);
 			glCompileShader(frag_shader_id);
 			print_shader_compile_error(frag_shader_id);
 
