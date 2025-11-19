@@ -7,7 +7,7 @@
 
 #include <glad/glad.h>
 
-#include "shader.h"
+#include "shader_program.h"
 
 namespace GL3D {
 	class Mesh {

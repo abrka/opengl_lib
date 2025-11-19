@@ -50,7 +50,15 @@ namespace GLRenderer {
 			mesh = std::make_unique<GL3D::Mesh>(quad_vertices, std::vector{ 3,2 }, quad_indices);
 			
 			const std::string asset_dir = std::string(TOSTRING(ASSET_DIR)) + "/";
-			debug_shader = ShaderBuilder::build(asset_dir + "shaders/debug_frag.glsl", asset_dir + "shaders/debug_vertex.glsl").value();
+			try
+			{
+				debug_shader = ShaderBuilder::build(asset_dir + "shaders/debug_frag.glsl", asset_dir + "shaders/debug_vertex.glsl").value();
+			}
+			catch (const std::exception& e)
+			{
+				std::cout << e.what() << "\n";
+				exit(-1);
+			}
 			
 			
 			font_shader = ShaderBuilder::build(asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl").value();

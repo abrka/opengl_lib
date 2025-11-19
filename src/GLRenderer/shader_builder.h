@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <expected>
 
-#include "GL3D/shader.h"
+#include "GL3D/shader_program.h"
 #include "utils.h"
 
 namespace GLRenderer {
@@ -22,7 +22,9 @@ namespace GLRenderer {
 			if (!vert_shader_str.has_value()) {
 				return std::unexpected(ShaderBuilderError::vert_shader_file_not_found);
 			}
-			auto shader_program = std::make_unique<GL3D::ShaderProgram>(frag_shader_str.value(), vert_shader_str.value());
+			auto vertex_shader = GL3D::Shader<GL3D::VertexShaderTag>{ vert_shader_str.value()};
+			auto fragment_shader = GL3D::Shader<GL3D::FragmentShaderTag>{ frag_shader_str.value() };
+			auto shader_program = std::make_unique<GL3D::ShaderProgram>(vertex_shader, fragment_shader);
 			return shader_program;
 		}
 	};
