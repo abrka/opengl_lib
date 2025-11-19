@@ -5,13 +5,11 @@
 #include <cassert>
 #include <memory>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "ft_library_raii.h"
 #include "GL3D/texture.h"
 #include "GL3D/mesh.h"
 #include "GL3D/shader.h"
@@ -39,9 +37,9 @@ namespace GLRenderer {
 	struct Font {
 		std::map<FT_ULong, FontFace> charcode_to_face_map{};
 
-		Font(FT_Library* ft_library, const std::string& font_file_path, FT_UInt font_height) {
+		Font(FTLibraryRAII& ft_library, const std::string& font_file_path, FT_UInt font_height) {
 			FT_Face ft_face{};
-			FT_Error err = FT_New_Face(*ft_library, font_file_path.c_str(), 0, &ft_face);
+			FT_Error err = FT_New_Face(ft_library.ft_library_raw, font_file_path.c_str(), 0, &ft_face);
 			assert(err == 0);
 			//err = FT_Set_Char_Size(ft_face, 0, char_height * 64, horiz_res, vert_res);
 			err = FT_Set_Pixel_Sizes(ft_face, 0, font_height);
@@ -59,14 +57,14 @@ namespace GLRenderer {
 		}
 	};
 
-	void render_text(const std::string& text, Font& font, GL3D::ShaderProgram& FontShader, float current_screen_width, float current_screen_height, float x, float y, float font_scale)
+	void render_text(const std::string& text, Font& font, GL3D::ShaderProgram& font_shader, float current_screen_width, float current_screen_height, float x, float y, float font_scale)
 	{
 		for (auto c = text.begin(); c != text.end(); c++)
 		{
 			FontFace& font_face = font.charcode_to_face_map.at(*c);
-			FontShader.set_texture("font_texture", *font_face.face_texture, 0);
+			font_shader.set_texture("font_texture", *font_face.face_texture, 0);
 			glm::mat4 projection = glm::ortho(0.0f, (float)current_screen_width, 0.0f, (float)current_screen_height);
-			FontShader.set_uniform("matrix", projection);
+			font_shader.set_uniform("matrix", projection);
 
 			float advance = font_face.face_advance.x;
 			float bearing_x = font_face.face_bitmap_left;
@@ -96,7 +94,7 @@ namespace GLRenderer {
 			unsigned int indices[] = { 0,1,2,3,4,5 };
 
 			GL3D::Mesh font_mesh{ std::span<Vertex2>(vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(indices) };
-			font_mesh.draw(FontShader);
+			font_mesh.draw(font_shader);
 			// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 			x += ((int)advance >> 6) * font_scale; // bitshift by 6 to get value in pixels (2^6 = 64)
 		}

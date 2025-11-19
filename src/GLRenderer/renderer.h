@@ -64,11 +64,8 @@ namespace GLRenderer {
 
 			font_shader = ShaderBuilder::build(asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl").value();
 
-			FT_Library ft_library{};
-			FT_Error err = FT_Init_FreeType(&ft_library);
-			assert(err == 0);
-			font = std::make_unique<Font>(&ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256);
-			FT_Done_FreeType(ft_library);
+			FTLibraryRAII ft_library{};
+			font = std::make_unique<Font>(ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256);
 		}
 
 		Renderer(const Renderer&) = delete;
