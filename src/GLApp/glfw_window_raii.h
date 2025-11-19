@@ -16,6 +16,12 @@ namespace GLApp {
 		~Window() {
 			glfw_destroy();
 		}
+		std::pair<int,int> get_width_and_height() {
+			int width{};
+			int height{};
+			glfwGetWindowSize(glfw_window, &width, &height);
+			return { width, height };
+		}
 		void frame_end() {
 			glfw_frame_end(glfw_window);
 		}

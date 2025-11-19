@@ -30,10 +30,7 @@ namespace GLApp {
 		Application& operator=(const Application& rhs) = delete;
 		void run() {
 			while (!glfwWindowShouldClose(window->glfw_window)) {
-				int width{};
-				int height{};
-				glfwGetWindowSize(window->glfw_window, &width, &height);
-				renderer->render(width, height);
+				renderer->render();
 				glfw_frame_end(window->glfw_window);
 			}
 		}

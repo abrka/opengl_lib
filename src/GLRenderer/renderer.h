@@ -64,7 +64,7 @@ namespace GLRenderer {
 		~Renderer() {
 			imgui_destroy();
 		}
-		void render(int screen_width, int screen_height) {
+		void render() {
 			imgui_frame_init();
 
 			ImGui::ShowDemoWindow(); // Show demo window! :)
@@ -88,6 +88,8 @@ namespace GLRenderer {
 
 
 			mesh->draw(*debug_shader);
+
+			auto [screen_width, screen_height] = window->get_width_and_height();
 			render_text(text, *font, *font_shader, screen_width, screen_height, x, y, font_scale);
 
 			imgui_frame_end();
