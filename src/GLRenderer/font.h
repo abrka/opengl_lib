@@ -30,7 +30,8 @@ namespace GLRenderer {
 			font_tex_spec.wrap_mode = GL_CLAMP_TO_BORDER;
 			font_tex_spec.filter_type = GL_NEAREST;
 			FT_Bitmap* ft_bitmap = &ft_glyph->bitmap;
-			face_texture = std::make_unique<GL3D::Texture>(ft_bitmap->width, ft_bitmap->rows, ft_bitmap->buffer, font_tex_spec);
+			auto ft_bitmap_data_span = std::span<unsigned char>(ft_bitmap->buffer, ft_bitmap->width * ft_bitmap->rows);
+			face_texture = std::make_unique<GL3D::Texture>(ft_bitmap->width, ft_bitmap->rows, ft_bitmap_data_span, font_tex_spec);
 		}
 	};
 
@@ -83,7 +84,7 @@ namespace GLRenderer {
 				glm::vec3 position{};
 				glm::vec2 texCoord{};
 			};
-			std::vector<Vertex2> vertices = {
+			Vertex2 vertices[] = {
 				{ { xpos,     ypos + h,0.0 },{ 0.0f, 0.0f } },
 				{ { xpos,     ypos,    0.0 },{ 0.0f, 1.0f } },
 				{ { xpos + w, ypos,    0.0 },{ 1.0f, 1.0f } },
@@ -91,8 +92,10 @@ namespace GLRenderer {
 				{ { xpos + w, ypos,    0.0 },{ 1.0f, 1.0f } },
 				{ { xpos + w, ypos + h,0.0 },{ 1.0f, 0.0f } }
 			};
-			std::vector<unsigned int> indices{ 0,1,2,3,4,5 };
-			GL3D::Mesh font_mesh{ vertices,{ 3,2 }, indices };
+			int num_floats_per_attr[] = { 3,2 };
+			unsigned int indices[] = { 0,1,2,3,4,5 };
+
+			GL3D::Mesh font_mesh{ std::span<Vertex2>(vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(indices) };
 			font_mesh.draw(FontShader);
 			// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 			x += ((int)advance >> 6) * font_scale; // bitshift by 6 to get value in pixels (2^6 = 64)

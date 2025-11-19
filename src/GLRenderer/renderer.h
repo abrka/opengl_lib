@@ -28,7 +28,7 @@ namespace GLRenderer {
 		std::unique_ptr<GL3D::ShaderProgram> font_shader{};
 
 	public:
-		Renderer(std::shared_ptr<GLApp::Window> window): window(window) {
+		Renderer(std::shared_ptr<GLApp::Window> window) : window(window) {
 			glad_init();
 			enable_gl_debug();
 			imgui_init(window->glfw_window);
@@ -38,17 +38,18 @@ namespace GLRenderer {
 				glm::vec3 position{};
 				glm::vec2 texCoord{};
 			};
-			std::vector<Vertex2> quad_vertices{
+			Vertex2 quad_vertices[] = {
 				{{-0.5, 0.5,0.0}, {0.0,1.0}},
 				{{ 0.5, 0.5,0.0}, {1.0,1.0}},
 				{{ 0.5,-0.5,0.0}, {1.0,0.0}},
 				{{-0.5,-0.5,0.0}, {0.0,0.0}},
 			};
-			std::vector<unsigned int> quad_indices{
+			unsigned int quad_indices[] = {
 				0,1,3,1,2,3
 			};
-			mesh = std::make_unique<GL3D::Mesh>(quad_vertices, std::vector{ 3,2 }, quad_indices);
-			
+			int num_floats_per_attr[] = { 3,2 };
+			mesh = std::make_unique<GL3D::Mesh>(std::span<Vertex2>(quad_vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(quad_indices));
+
 			const std::string asset_dir = std::string(TOSTRING(ASSET_DIR)) + "/";
 			try
 			{
@@ -59,10 +60,10 @@ namespace GLRenderer {
 				std::cout << e.what() << "\n";
 				exit(-1);
 			}
-			
-			
+
+
 			font_shader = ShaderBuilder::build(asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl").value();
-			
+
 			FT_Library ft_library{};
 			FT_Error err = FT_Init_FreeType(&ft_library);
 			assert(err == 0);

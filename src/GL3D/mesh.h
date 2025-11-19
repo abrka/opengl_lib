@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include <span>
 #include <vector>
 #include <memory>
 #include <numeric>
@@ -21,7 +21,7 @@ namespace GL3D {
 
 
 		template<typename VertexType>
-		Mesh(const std::vector<VertexType>& vertices, const std::vector<int>& num_floats_per_attr, const std::vector<unsigned int>& indices)
+		Mesh(std::span<VertexType> vertices, std::span<int> num_floats_per_attr, std::span<unsigned int> indices)
 		{
 
 			indices_size = indices.size();
@@ -68,7 +68,7 @@ namespace GL3D {
 
 	private:
 		// WARNING: vertex data must be float only
-		void set_vertex_attributes(unsigned int vao, unsigned int vbo, std::vector<int> num_floats_per_attr) {
+		void set_vertex_attributes(unsigned int vao, unsigned int vbo, std::span<int> num_floats_per_attr) {
 			glBindVertexArray(vao);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			int stride = std::accumulate(num_floats_per_attr.begin(), num_floats_per_attr.end(), 0) * sizeof(float);
