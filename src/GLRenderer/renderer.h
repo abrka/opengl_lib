@@ -67,16 +67,13 @@ namespace GLRenderer {
 			screen_quad_mesh = std::make_unique<GL3D::Mesh>(std::span<Vertex2>(screen_quad_vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(quad_indices));
 
 			const std::string asset_dir = std::string(TOSTRING(ASSET_DIR)) + "/";
-			try
-			{
-				debug_shader = ShaderBuilder::build(asset_dir + "shaders/debug_frag.glsl", asset_dir + "shaders/debug_vertex.glsl").value();
-			}
-			catch (const std::exception& e)
-			{
-				std::cout << e.what() << "\n";
-				exit(-1);
-			}
 
+			auto debug_shader_result = ShaderBuilder::build(asset_dir + "shaders/debug_frag.glsl", asset_dir + "shaders/debug_vertex.glsl");
+			if (!debug_shader_result.has_value()) {
+				std::cout << "error building debug shader:\n" << debug_shader_result.error().err_msg << "\n";
+				throw std::runtime_error{ "error building debug shader" };
+			}
+			debug_shader = std::move(debug_shader_result.value());
 
 			font_shader = ShaderBuilder::build(asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl").value();
 
