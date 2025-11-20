@@ -21,15 +21,17 @@ namespace GLApp {
 		double last_time_fps_was_set{};
 	private:
 		static void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-			glViewport(0, 0, width, height);
+			Application* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
+			app->renderer->on_window_resize(width, height);
 		}
 	public:
 		Application(int initial_screen_width, int initial_screen_height, int opengl_version_major, int opengl_version_minor) {
 			window = std::make_shared<Window>(initial_screen_width, initial_screen_height, opengl_version_major, opengl_version_minor);
-			glfwSetFramebufferSizeCallback(window->glfw_window, framebuffer_size_callback);
 			renderer = std::make_unique<GLRenderer::Renderer>(window);
+			glfwSetWindowUserPointer(window->glfw_window, this);
+			glfwSetFramebufferSizeCallback(window->glfw_window, framebuffer_size_callback);
 		}
-		Application(const Application&) = delete;           
+		Application(const Application&) = delete;
 		Application& operator=(const Application& rhs) = delete;
 		void run() {
 			while (!glfwWindowShouldClose(window->glfw_window)) {
@@ -39,15 +41,15 @@ namespace GLApp {
 				double delta = glfwGetTime() - prev_time;
 				double fps = 1 / delta;
 
-				
-				
+
+
 				if (glfwGetTime() - last_time_fps_was_set > fps_set_title_delay) {
 					std::string title = "fps: " + std::to_string(fps);
 					glfwSetWindowTitle(window->glfw_window, title.c_str());
 					last_time_fps_was_set = glfwGetTime();
 				}
 
-				
+
 			}
 		}
 	};

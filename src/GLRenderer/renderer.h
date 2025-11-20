@@ -104,6 +104,8 @@ namespace GLRenderer {
 
 			imgui_frame_end();
 		}
-
+		void on_window_resize(int width, int height) {
+			glViewport(0, 0, width, height);
+		}
 	};
 }
