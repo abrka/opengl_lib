@@ -1,8 +1,8 @@
-# OpenGL 3D Renderer
+# OpenGL Library
 
 ## Description 
 
-This is an 3D ui library written in OpenGL
+This is an OpenGL abstraction library
 
 
 ## Requirements
@@ -14,8 +14,8 @@ This is an 3D ui library written in OpenGL
 ## Building
 
 ```shell
-$ git clone https://github.com/abrka/opengl_ui_.git
-$ cd opengl
+$ git clone https://github.com/abrka/opengl_lib.git
+$ cd opengl_lib
 $ mkdir build
 $ cd build
 $ cmake ..

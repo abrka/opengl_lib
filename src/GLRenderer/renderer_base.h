@@ -30,6 +30,7 @@ namespace GLRenderer {
 			GLExternalUtils::imgui_frame_init();
 			render_user();
 			GLExternalUtils::imgui_frame_end();
+			window->frame_end();
 		}
 		void on_window_resize(int width, int height) {
 			glViewport(0, 0, width, height);

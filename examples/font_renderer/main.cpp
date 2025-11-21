@@ -13,7 +13,6 @@ int main() {
 	while (window->is_running()) {
 		double prev_time = glfwGetTime();
 		renderer->render();
-		window->frame_end();
 		double delta = glfwGetTime() - prev_time;
 		double fps = 1 / delta;
 		const double fps_set_title_delay = 0.5;

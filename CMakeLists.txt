@@ -1,39 +1,30 @@
 cmake_minimum_required(VERSION 3.6)
-project(opengl_ui_proj)
+project(opengl_lib_proj)
 
-file(GLOB OPENGL_SOURCES src/*.h src/*.cpp)
-add_executable(opengl_ui ${OPENGL_SOURCES})
-target_compile_features(opengl_ui PUBLIC cxx_std_20)
-target_include_directories(opengl_ui PUBLIC src)
-
-target_compile_definitions(opengl_ui PRIVATE ASSET_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data)
-
-set(OPENGL_VERSION_MAJOR "4" CACHE STRING "OpenGL Version Major" )
-set(OPENGL_VERSION_MINOR "6" CACHE STRING "OpenGL Version Minor")
-
-target_compile_definitions(opengl_ui PRIVATE OPENGL_VERSION_MAJOR=${OPENGL_VERSION_MAJOR})
-target_compile_definitions(opengl_ui PRIVATE OPENGL_VERSION_MINOR=${OPENGL_VERSION_MINOR})
+add_library(opengl_lib INTERFACE)
+target_include_directories(opengl_lib INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_compile_features(opengl_lib INTERFACE cxx_std_20)
 
 # Add expected 
 add_subdirectory(external/expected)
-target_link_libraries(opengl_ui PUBLIC tl::expected)
+target_link_libraries(opengl_lib INTERFACE tl::expected)
 
 # Build glad 
 add_library(glad external/glad/src/glad.c external/glad/include/glad/glad.h external/glad/include/KHR/khrplatform.h)
 target_include_directories(glad PUBLIC external/glad/include)
-target_link_libraries(opengl_ui PUBLIC glad)
+target_link_libraries(opengl_lib INTERFACE glad)
 
 # Add glfw
 add_subdirectory(external/glfw)
-target_link_libraries(opengl_ui PUBLIC glfw)
+target_link_libraries(opengl_lib INTERFACE glfw)
 
 # Add glm
 add_subdirectory(external/glm)
-target_link_libraries(opengl_ui PUBLIC glm::glm)
+target_link_libraries(opengl_lib INTERFACE glm::glm)
 
 # Add FreeType
 add_subdirectory(external/freetype)
-target_link_libraries(opengl_ui PUBLIC freetype)
+target_link_libraries(opengl_lib INTERFACE freetype)
 
 # Build imgui
 add_library(imgui external/imgui-docking/imconfig.h
@@ -56,5 +47,8 @@ add_library(imgui external/imgui-docking/imconfig.h
 
 target_include_directories(imgui PUBLIC external/imgui-docking/backends external/imgui-docking external/imgui-docking/misc/cpp)
 target_link_libraries(imgui PUBLIC glfw)
-target_link_libraries(opengl_ui PUBLIC imgui)
+target_link_libraries(opengl_lib INTERFACE imgui)
+
+# Add example project
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples/font_renderer)
 
