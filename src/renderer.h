@@ -15,7 +15,8 @@
 #include "GLExternalUtils/opengl_util.h"
 
 #include "GLRenderer/shader_builder.h"
-#include "GLRenderer/font.h"
+
+#include "font.h"
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
@@ -35,10 +36,10 @@ class Renderer : public GLRenderer::RendererBase
 	std::unique_ptr<GL3D::Texture> framebuffer_texture{};
 	std::unique_ptr<GL3D::Renderbuffer> framebuffer_renderbuffer{};
 
-	std::unique_ptr<GLRenderer::Font> font{};
+	std::unique_ptr<Font> font{};
 
 public:
-	Renderer(std::shared_ptr<GLApp::Window> window) : RendererBase(window) {
+	Renderer(std::shared_ptr<GLExternalRAII::Window> window) : RendererBase(window) {
 		struct Vertex2 {
 			glm::vec3 position{};
 			glm::vec2 texCoord{};
@@ -73,8 +74,8 @@ public:
 
 		font_shader = GLRenderer::ShaderBuilder::build(asset_dir + "shaders/font_frag.glsl", asset_dir + "shaders/vertex.glsl").value();
 
-		GLRenderer::FTLibraryRAII ft_library{};
-		font = std::make_unique<GLRenderer::Font>(ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256);
+		FTLibraryRAII ft_library{};
+		font = std::make_unique<Font>(ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256);
 
 
 		create_screen_framebuffer();

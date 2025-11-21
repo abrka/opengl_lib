@@ -11,25 +11,25 @@
 namespace GLRenderer {
 	class RendererBase {
 	protected:
-		std::shared_ptr<GLApp::Window> window{};
+		std::shared_ptr<GLExternalRAII::Window> window{};
 	public:
-		RendererBase(std::shared_ptr<GLApp::Window> window) : window(window) {
-			glad_init();
-			enable_gl_debug();
-			imgui_init(window->glfw_window);
+		RendererBase(std::shared_ptr<GLExternalRAII::Window> window) : window(window) {
+			GLExternalUtils::glad_init();
+			GLExternalUtils::enable_gl_debug();
+			GLExternalUtils::imgui_init(window->glfw_window);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // this makes sure opengl can use bitmap textures with no alighment
 		}
 		RendererBase(const RendererBase&) = delete;
 		RendererBase& operator=(const RendererBase& rhs) = delete;
 
 		virtual ~RendererBase() {
-			imgui_destroy();
+			GLExternalUtils::imgui_destroy();
 		}
 		virtual void render_user() = 0;
 		void render() {
-			imgui_frame_init();
+			GLExternalUtils::imgui_frame_init();
 			render_user();
-			imgui_frame_end();
+			GLExternalUtils::imgui_frame_end();
 		}
 		void on_window_resize(int width, int height) {
 			glViewport(0, 0, width, height);

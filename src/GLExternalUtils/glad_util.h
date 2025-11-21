@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 
 
-namespace GLRenderer {
+namespace GLExternalUtils {
 	void glad_init()
 	{
 		// glad: load all OpenGL function pointers

@@ -4,7 +4,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-namespace GLRenderer {
+namespace GLExternalUtils {
 	void imgui_init(GLFWwindow* window)
 	{
 		// Setup Dear ImGui context

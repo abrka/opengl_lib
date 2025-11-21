@@ -3,7 +3,7 @@
 #include <cassert>
 #include <GLFW/glfw3.h>
 
-namespace GLApp {
+namespace GLExternalUtils {
 	void glfw_error_callback(int error, const char* description) {
 		fprintf(stderr, "[GLFW ERROR] %d: %s\n", error, description);
 		assert(false);
