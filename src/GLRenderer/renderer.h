@@ -26,18 +26,20 @@ namespace GLRenderer {
 		std::shared_ptr<GLApp::Window> window{};
 
 		std::unique_ptr<GL3D::Mesh> debug_mesh{};
+		std::unique_ptr<GL3D::Mesh> screen_quad_mesh{};
 
 		std::unique_ptr<GL3D::ShaderProgram> debug_shader{};
-		std::unique_ptr<Font> font{};
 		std::unique_ptr<GL3D::ShaderProgram> font_shader{};
+		std::unique_ptr<GL3D::ShaderProgram> screen_shader{};
 
-		std::unique_ptr<GL3D::Mesh> screen_quad_mesh{};
 		std::unique_ptr<GL3D::Framebuffer> framebuffer{};
 		std::unique_ptr<GL3D::Texture> framebuffer_texture{};
 		std::unique_ptr<GL3D::Renderbuffer> framebuffer_renderbuffer{};
 
+		std::unique_ptr<Font> font{};
+
 	public:
-		Renderer(std::shared_ptr<GLApp::Window> window) : window(window) {
+		Renderer(std::shared_ptr<GLApp::Window> _window) : window(_window) {
 			glad_init();
 			enable_gl_debug();
 			imgui_init(window->glfw_window);
@@ -80,13 +82,14 @@ namespace GLRenderer {
 			FTLibraryRAII ft_library{};
 			font = std::make_unique<Font>(ft_library, asset_dir + "fonts/0xProtoNerdFontMono-Regular.ttf", 256);
 
-			framebuffer = std::make_unique<GL3D::Framebuffer>();
-			auto [window_width, window_height] = window->get_width_and_height();
-			framebuffer_texture = std::make_unique<GL3D::Texture>(window_width, window_height, std::span<unsigned char>{}, GL3D::TextureSpec{ .generate_mipmap = false });
-			framebuffer->attach_texture(*framebuffer_texture);
-			framebuffer_renderbuffer = std::make_unique<GL3D::Renderbuffer>(GL_DEPTH24_STENCIL8, window_width, window_height);
-			framebuffer->attach_renderbuffer(*framebuffer_renderbuffer);
-			assert(framebuffer->get_status());
+
+			create_screen_framebuffer();
+			auto screen_shader_res = ShaderBuilder::build(asset_dir + "shaders/screen_frag.glsl", asset_dir + "shaders/screen_vertex.glsl");
+			if (!screen_shader_res.has_value()) {
+				std::cout << screen_shader_res.error().err_msg << "\n";
+				assert(false);
+			}
+			screen_shader = std::move(screen_shader_res.value());
 		}
 
 		Renderer(const Renderer&) = delete;
@@ -99,14 +102,14 @@ namespace GLRenderer {
 			imgui_frame_init();
 
 			ImGui::ShowDemoWindow(); // Show demo window! :)
-			static float font_scale{ 1 };
+			static float font_scale{ 0.2 };
 			static float font_pos[2] = { 0,0 };
 			ImGui::Begin("Font");
-			ImGui::SliderFloat("font scale", &font_scale, 1, 100);
+			ImGui::SliderFloat("font scale", &font_scale, 0.1, 5);
 			ImGui::SliderFloat2("font pos", font_pos, 0, 800);
 			ImGui::End();
 
-
+			framebuffer->bind();
 			glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
 			glEnable(GL_DEPTH_TEST);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -123,10 +126,27 @@ namespace GLRenderer {
 			auto [screen_width, screen_height] = window->get_width_and_height();
 			render_text(text, *font, *font_shader, screen_width, screen_height, x, y, font_scale);
 
+			framebuffer->unbind();
+			glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			screen_shader->set_texture("screen_texture", *framebuffer_texture, 0);
+			screen_quad_mesh->draw(*screen_shader);
+
 			imgui_frame_end();
 		}
 		void on_window_resize(int width, int height) {
 			glViewport(0, 0, width, height);
+			create_screen_framebuffer();
+		}
+	private:
+		void create_screen_framebuffer() {
+			framebuffer = std::make_unique<GL3D::Framebuffer>();
+			auto [window_width, window_height] = window->get_width_and_height();
+			framebuffer_texture = std::make_unique<GL3D::Texture>(window_width, window_height, std::span<unsigned char>{}, GL3D::TextureSpec{ .generate_mipmap = false });
+			framebuffer->attach_texture(*framebuffer_texture);
+			framebuffer_renderbuffer = std::make_unique<GL3D::Renderbuffer>(GL_DEPTH24_STENCIL8, window_width, window_height);
+			framebuffer->attach_renderbuffer(*framebuffer_renderbuffer);
+			assert(framebuffer->get_status());
 		}
 	};
 }
