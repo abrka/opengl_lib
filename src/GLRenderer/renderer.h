@@ -7,7 +7,7 @@
 #include "GL3D/renderbuffer.h"
 
 
-#include "GLApp/glfw_window_raii.h"
+#include "GLExternalRAII/glfw_window_raii.h"
 
 #include "GLExternalUtils/glad_util.h"
 #include "GLExternalUtils/imgui_util.h"

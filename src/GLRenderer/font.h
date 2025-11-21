@@ -9,7 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "ft_library_raii.h"
+#include "GLExternalRAII/ft_library_raii.h"
 #include "GL3D/texture.h"
 #include "GL3D/mesh.h"
 #include "GL3D/shader.h"

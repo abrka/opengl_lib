@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "GLRenderer/renderer.h"
-#include "glfw_window_raii.h"
+#include "GLExternalRAII/glfw_window_raii.h"
 
 
 #define STRINGIFY(x) #x
