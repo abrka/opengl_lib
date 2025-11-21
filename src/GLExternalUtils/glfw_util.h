@@ -1,5 +1,6 @@
 #pragma once 
 
+#include <cassert>
 #include <GLFW/glfw3.h>
 
 namespace GLApp {
