@@ -16,6 +16,9 @@ namespace GLApp {
 		~Window() {
 			glfw_destroy();
 		}
+		bool is_running() const {
+			return !glfwWindowShouldClose(glfw_window);
+		}
 		std::pair<int,int> get_width_and_height() {
 			int width{};
 			int height{};

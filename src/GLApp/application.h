@@ -34,7 +34,7 @@ namespace GLApp {
 		Application(const Application&) = delete;
 		Application& operator=(const Application& rhs) = delete;
 		void run() {
-			while (!glfwWindowShouldClose(window->glfw_window)) {
+			while (window->is_running()) {
 				double prev_time = glfwGetTime();
 				renderer->render();
 				glfw_frame_end(window->glfw_window);
