@@ -37,7 +37,7 @@ namespace GLApp {
 			while (window->is_running()) {
 				double prev_time = glfwGetTime();
 				renderer->render();
-				glfw_frame_end(window->glfw_window);
+				window->frame_end();
 				double delta = glfwGetTime() - prev_time;
 				double fps = 1 / delta;
 
