@@ -44,15 +44,17 @@ namespace GL3D {
 			glUseProgram(0);
 		}
 
+		// returns true if the uniform exists
 		template<typename T>
-		void set_uniform(const std::string& uniformName, T val) {
+		bool set_uniform(const std::string& uniformName, T val) {
 			bind();
 			int uniformLocation = glGetUniformLocation(id, uniformName.c_str());
 			if (uniformLocation == -1) {
-				std::cerr << "the uniform youre setting: " << uniformName << " does not exist/it is the wrong type/ it is not used by all shaders/it was discarded by the shader compiler because it is unused\n";
+				return false;
 			}
 			set_shader_uniform_from_location(uniformLocation, val);
 			unbind();
+			return true;
 		}
 		void set_texture(const std::string& uniformName, const Texture& tex, unsigned int textureUnit) {
 			tex.activate(textureUnit);
