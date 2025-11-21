@@ -9,9 +9,9 @@
 
 #include "GLApp/glfw_window_raii.h"
 
-#include "glad_util.h"
-#include "imgui_util.h"
-#include "opengl_util.h"
+#include "GLExternalUtils/glad_util.h"
+#include "GLExternalUtils/imgui_util.h"
+#include "GLExternalUtils/opengl_util.h"
 
 #include "shader_builder.h"
 #include "font.h"

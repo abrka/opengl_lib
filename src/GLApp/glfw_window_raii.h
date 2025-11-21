@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "glfw_util.h"
+#include "GLExternalUtils/glfw_util.h"
 
 
 namespace GLApp {
