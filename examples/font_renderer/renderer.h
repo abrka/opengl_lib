@@ -120,7 +120,7 @@ public:
 		screen_quad_mesh->draw(*screen_shader);
 	}
 	void on_window_resize(int width, int height) {
-		RendererBase::on_window_resize(width, height);
+		glViewport(0, 0, width, height);
 		create_screen_framebuffer();
 	}
 private:
