@@ -14,7 +14,7 @@
 #include "GLExternalUtils/imgui_util.h"
 #include "GLExternalUtils/opengl_util.h"
 
-#include "GLRenderer/shader_builder.h"
+#include "shader_builder.h"
 
 #include "font.h"
 

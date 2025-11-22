@@ -5,10 +5,6 @@ add_library(opengl_lib INTERFACE)
 target_include_directories(opengl_lib INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_compile_features(opengl_lib INTERFACE cxx_std_20)
 
-# Add expected 
-add_subdirectory(external/expected)
-target_link_libraries(opengl_lib INTERFACE tl::expected)
-
 # Build glad 
 add_library(glad external/glad/src/glad.c external/glad/include/glad/glad.h external/glad/include/KHR/khrplatform.h)
 target_include_directories(glad PUBLIC external/glad/include)

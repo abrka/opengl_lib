@@ -16,3 +16,7 @@ target_compile_definitions(opengl_lib_example_font_renderer PRIVATE ASSET_DIR=${
 # Add FreeType
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/freetype)
 target_link_libraries(opengl_lib_example_font_renderer PRIVATE freetype)
+
+# Add tl expected
+add_subdirectory(external/expected)
+target_link_libraries(opengl_lib_example_font_renderer PRIVATE tl::expected)

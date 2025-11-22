@@ -12,5 +12,5 @@
 	path = examples/font_renderer/external/freetype
 	url = https://github.com/freetype/freetype.git
 [submodule "external/expected"]
-	path = external/expected
+	path = examples/font_renderer/external/expected
 	url = https://github.com/TartanLlama/expected.git
