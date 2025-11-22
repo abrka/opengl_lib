@@ -9,7 +9,7 @@
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
 [submodule "external/freetype"]
-	path = external/freetype
+	path = examples/font_renderer/external/freetype
 	url = https://github.com/freetype/freetype.git
 [submodule "external/expected"]
 	path = external/expected

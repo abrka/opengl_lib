@@ -22,10 +22,6 @@ target_link_libraries(opengl_lib INTERFACE glfw)
 add_subdirectory(external/glm)
 target_link_libraries(opengl_lib INTERFACE glm::glm)
 
-# Add FreeType
-add_subdirectory(external/freetype)
-target_link_libraries(opengl_lib INTERFACE freetype)
-
 # Build imgui
 add_library(imgui external/imgui-docking/imconfig.h
                   external/imgui-docking/imgui_demo.cpp

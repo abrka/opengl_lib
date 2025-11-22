@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 project(opengl_lib_example_font_renderer_proj)
 
 add_executable(opengl_lib_example_font_renderer ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
-target_link_libraries(opengl_lib_example_font_renderer PUBLIC opengl_lib)
+target_link_libraries(opengl_lib_example_font_renderer PRIVATE opengl_lib)
 
 set(OPENGL_VERSION_MAJOR "4" CACHE STRING "OpenGL Version Major" )
 set(OPENGL_VERSION_MINOR "6" CACHE STRING "OpenGL Version Minor")
@@ -13,4 +13,6 @@ target_compile_definitions(opengl_lib_example_font_renderer PRIVATE OPENGL_VERSI
 target_compile_definitions(opengl_lib_example_font_renderer PRIVATE ASSET_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data)
 
 
-
+# Add FreeType
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/freetype)
+target_link_libraries(opengl_lib_example_font_renderer PRIVATE freetype)
