@@ -60,6 +60,6 @@ namespace GL3D {
 		}
 
 	};
-	
+
 	
 }
