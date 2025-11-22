@@ -56,9 +56,9 @@ namespace GL3D {
 			unbind();
 			return true;
 		}
-		void set_texture(const std::string& uniformName, const Texture& tex, unsigned int textureUnit) {
+		bool set_texture(const std::string& uniformName, const Texture& tex, unsigned int textureUnit) {
 			tex.activate(textureUnit);
-			set_uniform(uniformName, (int)textureUnit);
+			return set_uniform(uniformName, (int)textureUnit);
 		}
 
 
