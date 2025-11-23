@@ -1,5 +1,6 @@
 #pragma once 
 
+#include <cassert>
 #include <iostream>
 
 namespace GLExternalUtils {
@@ -82,7 +83,7 @@ namespace GLExternalUtils {
 		}
 		std::cout << std::endl;
 		std::cout << std::endl;
-
+		assert(false);
 	}
 
 	void enable_gl_debug()

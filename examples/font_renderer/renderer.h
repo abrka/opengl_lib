@@ -40,28 +40,24 @@ class Renderer : public GLRenderer::RendererBase
 
 public:
 	Renderer(std::shared_ptr<GLExternalRAII::Window> window) : RendererBase(window) {
-		struct Vertex2 {
-			glm::vec3 position{};
-			glm::vec2 texCoord{};
+		float screen_quad_vertices[] = {
+			-1.0, 1.0,0.0, 0.0,1.0,
+			 1.0, 1.0,0.0, 1.0,1.0,
+			 1.0,-1.0,0.0, 1.0,0.0,
+			-1.0,-1.0,0.0, 0.0,0.0,
 		};
-		Vertex2 screen_quad_vertices[] = {
-			{{-1.0, 1.0,0.0}, {0.0,1.0}},
-			{{ 1.0, 1.0,0.0}, {1.0,1.0}},
-			{{ 1.0,-1.0,0.0}, {1.0,0.0}},
-			{{-1.0,-1.0,0.0}, {0.0,0.0}},
-		};
-		Vertex2 debug_mesh_vertices[] = {
-			{{-0.5, 0.5,0.0}, {0.0,1.0}},
-			{{ 0.5, 0.5,0.0}, {1.0,1.0}},
-			{{ 0.5,-0.5,0.0}, {1.0,0.0}},
-			{{-0.5,-0.5,0.0}, {0.0,0.0}},
+		float debug_mesh_vertices[] = {
+			-0.5, 0.5,0.0, 0.0,1.0,
+			 0.5, 0.5,0.0, 1.0,1.0,
+			 0.5,-0.5,0.0, 1.0,0.0,
+			-0.5,-0.5,0.0, 0.0,0.0,
 		};
 		unsigned int quad_indices[] = {
 			0,1,3,1,2,3
 		};
 		int num_floats_per_attr[] = { 3,2 };
-		debug_mesh = std::make_unique<GL3D::Mesh>(std::span<Vertex2>(debug_mesh_vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(quad_indices));
-		screen_quad_mesh = std::make_unique<GL3D::Mesh>(std::span<Vertex2>(screen_quad_vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(quad_indices));
+		debug_mesh = std::make_unique<GL3D::Mesh>(std::span<float>(debug_mesh_vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(quad_indices));
+		screen_quad_mesh = std::make_unique<GL3D::Mesh>(std::span<float>(screen_quad_vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(quad_indices));
 
 		const std::string asset_dir = std::string(TOSTRING(ASSET_DIR)) + "/";
 

@@ -20,8 +20,7 @@ namespace GL3D {
 		unsigned int ebo = 0;
 
 
-		template<typename VertexType>
-		Mesh(std::span<VertexType> vertices, std::span<int> num_floats_per_attr, std::span<unsigned int> indices)
+		Mesh(std::span<float> vertices, std::span<int> num_floats_per_attr, std::span<unsigned int> indices)
 		{
 
 			indices_size = indices.size();
@@ -34,7 +33,7 @@ namespace GL3D {
 			glGenBuffers(1, &vbo);
 
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(VertexType) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);

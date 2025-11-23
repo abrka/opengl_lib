@@ -80,22 +80,18 @@ void render_text(const std::string& text, Font& font, GL3D::ShaderProgram& font_
 		float w = size_x * font_scale;
 		float h = size_y * font_scale;
 
-		struct Vertex2 {
-			glm::vec3 position{};
-			glm::vec2 texCoord{};
-		};
-		Vertex2 vertices[] = {
-			{ { xpos,     ypos + h,0.0 },{ 0.0f, 0.0f } },
-			{ { xpos,     ypos,    0.0 },{ 0.0f, 1.0f } },
-			{ { xpos + w, ypos,    0.0 },{ 1.0f, 1.0f } },
-			{ { xpos,     ypos + h,0.0 },{ 0.0f, 0.0f } },
-			{ { xpos + w, ypos,    0.0 },{ 1.0f, 1.0f } },
-			{ { xpos + w, ypos + h,0.0 },{ 1.0f, 0.0f } }
+		float vertices[] = {
+			 xpos,     ypos + h,0.0 , 0.0f, 0.0f,
+			 xpos,     ypos,    0.0 , 0.0f, 1.0f,
+			 xpos + w, ypos,    0.0 , 1.0f, 1.0f,
+			 xpos,     ypos + h,0.0 , 0.0f, 0.0f,
+			 xpos + w, ypos,    0.0 , 1.0f, 1.0f,
+			 xpos + w, ypos + h,0.0 , 1.0f, 0.0f
 		};
 		int num_floats_per_attr[] = { 3,2 };
 		unsigned int indices[] = { 0,1,2,3,4,5 };
 
-		GL3D::Mesh font_mesh{ std::span<Vertex2>(vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(indices) };
+		GL3D::Mesh font_mesh{ std::span<float>(vertices), std::span<int>(num_floats_per_attr), std::span<unsigned int>(indices) };
 		font_mesh.draw(font_shader);
 		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 		x += ((int)advance >> 6) * font_scale; // bitshift by 6 to get value in pixels (2^6 = 64)
