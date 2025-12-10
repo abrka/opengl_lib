@@ -46,7 +46,7 @@ namespace GL3D {
 
 		// returns true if the uniform exists
 		template<typename T>
-		bool set_uniform(const std::string& uniformName, T val) {
+		bool set_uniform(const std::string& uniformName, const T val) const {
 			bind();
 			int uniformLocation = glGetUniformLocation(id, uniformName.c_str());
 			if (uniformLocation == -1) {
@@ -56,26 +56,26 @@ namespace GL3D {
 			unbind();
 			return true;
 		}
-		bool set_texture(const std::string& uniformName, const Texture& tex, unsigned int textureUnit) {
+		bool set_texture(const std::string& uniformName, const Texture& tex, unsigned int textureUnit) const {
 			tex.activate(textureUnit);
 			return set_uniform(uniformName, (int)textureUnit);
 		}
 
 
 	private:
-		void set_shader_uniform_from_location(int uniformLocation, float val) {
+		void set_shader_uniform_from_location(int uniformLocation, float val) const {
 			glUniform1f(uniformLocation, val);
 		}
-		void set_shader_uniform_from_location(int uniformLocation, int val) {
+		void set_shader_uniform_from_location(int uniformLocation, int val) const {
 			glUniform1i(uniformLocation, val);
 		}
-		void set_shader_uniform_from_location(int uniformLocation, glm::mat4 val) {
+		void set_shader_uniform_from_location(int uniformLocation, glm::mat4 val) const {
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(val));
 		}
-		void set_shader_uniform_from_location(int uniformLocation, glm::mat3 val) {
+		void set_shader_uniform_from_location(int uniformLocation, glm::mat3 val) const {
 			glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(val));
 		}
-		void set_shader_uniform_from_location(int uniformLocation, glm::vec3 val) {
+		void set_shader_uniform_from_location(int uniformLocation, glm::vec3 val) const {
 			glUniform3f(uniformLocation, val.x, val.y, val.z);
 		}
 
