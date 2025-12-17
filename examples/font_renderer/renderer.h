@@ -39,7 +39,7 @@ class Renderer : public GLRenderer::RendererBase
 	std::unique_ptr<Font> font{};
 
 public:
-	Renderer(std::shared_ptr<GLExternalRAII::Window> window) : RendererBase(window) {
+	Renderer(GLExternalRAII::Window& window) : RendererBase(window) {
 		float screen_quad_vertices[] = {
 			-1.0, 1.0,0.0, 0.0,1.0,
 			 1.0, 1.0,0.0, 1.0,1.0,
