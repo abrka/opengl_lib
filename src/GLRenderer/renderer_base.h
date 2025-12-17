@@ -11,12 +11,12 @@
 namespace GLRenderer {
 	class RendererBase {
 	protected:
-		std::shared_ptr<GLExternalRAII::Window> window{};
+		GLExternalRAII::Window* window{};
 	public:
-		RendererBase(std::shared_ptr<GLExternalRAII::Window> window) : window(window) {
+		RendererBase(GLExternalRAII::Window& window) : window(&window) {
 			GLExternalUtils::glad_init();
 			GLExternalUtils::enable_gl_debug();
-			GLExternalUtils::imgui_init(window->glfw_window);
+			GLExternalUtils::imgui_init(window.glfw_window);
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // this makes sure opengl can use bitmap textures with no alighment
 		}
 		RendererBase(const RendererBase&) = delete;
