@@ -26,20 +26,16 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         build_type: [Release]
         c_compiler: [gcc, clang, cl]
-        triplet: [x64-linux, x64-windows]
         include:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
-            triplet: x64-windows
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-            triplet: x64-linux
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
-            triplet: x64-linux
         exclude:
           - os: windows-latest
             c_compiler: gcc
@@ -66,8 +62,6 @@ jobs:
       with:
         # (Optional) Specify the manifest directory if using manifest mode
         manifest-dir: ${{ github.workspace }}
-        # (Optional) Choose the target triplet (e.g., x64-linux, x64-windows)
-        triplet: ${{ matrix.triplet }}
         # (Optional) GitHub token for registry authentication
         token: ${{ github.token }}
 
