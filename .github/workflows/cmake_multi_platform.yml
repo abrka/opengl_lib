@@ -2,6 +2,9 @@
 # See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
 name: CMake on multiple platforms
 
+env:
+  VCPKG_COMMIT: "d7112d1a4fb50410d3639f5f586972591d848beb"
+
 on:
   push:
     branches: [ "master" ]
@@ -56,14 +59,9 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: vcpkg
-      id: vcpkg
-      uses: johnwason/vcpkg-action@v6
-      with:
-        # (Optional) Specify the manifest directory if using manifest mode
-        manifest-dir: ${{ github.workspace }}
-        # (Optional) GitHub token for registry authentication
-        token: ${{ github.token }}
+    - name: Install vcpkg
+      uses: friendlyanon/setup-vcpkg@v1
+      with: { committish: "${{ env.VCPKG_COMMIT }}" }
 
     - name: Install Dependencies
       if: matrix.os == 'ubuntu-latest'
@@ -75,10 +73,10 @@ jobs:
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        --preset=default
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -DCMAKE_TOOLCHAIN_FILE=${{ steps.vcpkg.outputs.vcpkg-toolchain-file }}
         -S ${{ github.workspace }}
 
     - name: Build
