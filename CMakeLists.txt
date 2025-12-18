@@ -58,11 +58,11 @@ install(EXPORT opengl_lib_targets
 include(CMakePackageConfigHelpers)
 
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/opengl_lib_config.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/opengl_libConfig.cmake"
   INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/opengl_lib
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/opengl_lib_config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/opengl_libConfig.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/opengl_lib
 )
