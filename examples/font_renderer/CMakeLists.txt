@@ -12,11 +12,10 @@ target_compile_definitions(opengl_lib_example_font_renderer PRIVATE OPENGL_VERSI
 
 target_compile_definitions(opengl_lib_example_font_renderer PRIVATE ASSET_DIR=${CMAKE_CURRENT_SOURCE_DIR}/data)
 
+# Add tl expected
+find_package(tl-expected REQUIRED)
+target_link_libraries(opengl_lib_example_font_renderer PRIVATE tl::expected)
 
 # Add FreeType
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/freetype)
-target_link_libraries(opengl_lib_example_font_renderer PRIVATE freetype)
-
-# Add tl expected
-add_subdirectory(external/expected)
-target_link_libraries(opengl_lib_example_font_renderer PRIVATE tl::expected)
+find_package(Freetype REQUIRED)
+target_link_libraries(opengl_lib_example_font_renderer PRIVATE Freetype::Freetype)

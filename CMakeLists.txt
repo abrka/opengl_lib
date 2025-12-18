@@ -1,46 +1,68 @@
 cmake_minimum_required(VERSION 3.6)
+
+option(OPENGL_LIB_BUILD_EXAMPLE "Build Example Font Renderer" ON)
+if(OPENGL_LIB_BUILD_EXAMPLE)
+    list(APPEND VCPKG_MANIFEST_FEATURES "example")
+endif()
+
 project(opengl_lib_proj)
 
+include(GNUInstallDirs)
+
 add_library(opengl_lib INTERFACE)
-target_include_directories(opengl_lib INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_library(opengl_lib::opengl_lib ALIAS opengl_lib)
+
+target_include_directories(opengl_lib 
+    INTERFACE 
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
+     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
 target_compile_features(opengl_lib INTERFACE cxx_std_20)
 
-# Build glad 
-add_library(glad external/glad/src/glad.c external/glad/include/glad/glad.h external/glad/include/KHR/khrplatform.h)
-target_include_directories(glad PUBLIC external/glad/include)
-target_link_libraries(opengl_lib INTERFACE glad)
+# Add glad 
+find_package(glad REQUIRED)
+target_link_libraries(opengl_lib INTERFACE glad::glad)
 
 # Add glfw
-add_subdirectory(external/glfw)
+find_package(glfw3 REQUIRED)
 target_link_libraries(opengl_lib INTERFACE glfw)
 
 # Add glm
-add_subdirectory(external/glm)
+find_package(glm REQUIRED)
 target_link_libraries(opengl_lib INTERFACE glm::glm)
 
-# Build imgui
-add_library(imgui external/imgui-docking/imconfig.h
-                  external/imgui-docking/imgui_demo.cpp
-                  external/imgui-docking/imgui_draw.cpp
-                  external/imgui-docking/imgui_internal.h
-                  external/imgui-docking/imgui_tables.cpp 
-                  external/imgui-docking/imgui_widgets.cpp 
-                  external/imgui-docking/imgui.cpp 
-                  external/imgui-docking/imgui.h 
-                  external/imgui-docking/imstb_rectpack.h 
-                  external/imgui-docking/imstb_textedit.h 
-                  external/imgui-docking/imstb_truetype.h 
-                  external/imgui-docking/misc/cpp/imgui_stdlib.cpp 
-                  external/imgui-docking/misc/cpp/imgui_stdlib.h
-                  external/imgui-docking/backends/imgui_impl_opengl3.h
-                  external/imgui-docking/backends/imgui_impl_opengl3.cpp
-                  external/imgui-docking/backends/imgui_impl_glfw.h
-                  external/imgui-docking/backends/imgui_impl_glfw.cpp )
-
-target_include_directories(imgui PUBLIC external/imgui-docking/backends external/imgui-docking external/imgui-docking/misc/cpp)
-target_link_libraries(imgui PUBLIC glfw)
-target_link_libraries(opengl_lib INTERFACE imgui)
+# Add imgui
+find_package(imgui REQUIRED)
+target_link_libraries(opengl_lib INTERFACE imgui::imgui)
 
 # Add example project
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples/font_renderer)
+if(OPENGL_LIB_BUILD_EXAMPLE)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples/font_renderer)
+endif()
 
+install(TARGETS opengl_lib
+    EXPORT opengl_lib_targets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(DIRECTORY src DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(EXPORT opengl_lib_targets
+    FILE opengl_lib_targets.cmake
+    NAMESPACE opengl_lib::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/opengl_lib
+)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/opengl_lib_config.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/opengl_lib
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/opengl_lib_config.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/opengl_lib
+)

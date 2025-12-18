@@ -16,8 +16,7 @@ This is an OpenGL abstraction library
 ```shell
 $ git clone https://github.com/abrka/opengl_lib.git
 $ cd opengl_lib
-$ mkdir build
+$ cmake --preset=default
 $ cd build
-$ cmake ..
 $ cmake --build .
 ```

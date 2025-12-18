@@ -1,0 +1,26 @@
+{
+  "name": "opengl-lib",
+  "version": "1.0",
+  "dependencies": [
+    "glad",
+    "glfw3",
+    "glm",
+    {
+      "name": "imgui",
+      "features": [
+        "docking-experimental",
+        "glfw-binding",
+        "opengl3-binding"
+      ]
+    }
+  ],
+  "features": {
+    "example": {
+      "description": "An example font renderer",
+      "dependencies": [
+        "freetype",
+        "tl-expected"
+      ]
+    }
+  }
+}
