@@ -5,6 +5,11 @@
       "name": "default",
       "binaryDir": "${sourceDir}/build",
       "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
+      "name": "x64-windows",
+      "inherits": "default",
+      "cacheVariables": {"CMAKE_CXX_COMPILER": "cl.exe", "CMAKE_C_COMPILER": "cl.exe"}
     }
   ]
 }

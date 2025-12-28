@@ -1,48 +1,22 @@
 #pragma once
 
-
-#include <exception>
 #include <string>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
+#include <glm/fwd.hpp>
 #include "shader.h"
-#include "texture.h"
 
 namespace GL3D {
+	class Texture;
 	class ShaderProgram {
 	public:
 		unsigned int id{};
 
 		// throws exception
-		ShaderProgram(const Shader<VertexShaderTag>& vertex_shader, const Shader<FragmentShaderTag>& fragment_shader) {
-			id = glCreateProgram();
-			glAttachShader(id, vertex_shader.id);
-			glAttachShader(id, fragment_shader.id);
-			glLinkProgram(id);
-			std::string err_msg = get_shader_program_link_error_str(id);
-			if (!err_msg.empty()) {
-				throw std::runtime_error{ "shader link error in id" + std::to_string(id) + "error:" + err_msg };
-			}
-		}
-
+		ShaderProgram(const Shader<VertexShaderTag>& vertex_shader, const Shader<FragmentShaderTag>& fragment_shader);
 		ShaderProgram(const ShaderProgram& rhs) = delete;
 		ShaderProgram& operator=(const ShaderProgram& rhs) = delete;
-
-		~ShaderProgram()
-		{
-			glUseProgram(0);
-			glDeleteProgram(id);
-		}
-
-		void bind() const {
-			glUseProgram(id);
-		}
-		void unbind() const {
-			glUseProgram(0);
-		}
+		~ShaderProgram();
+		void bind() const;
+		void unbind() const;
 
 		// returns true if the uniform exists
 		template<typename T>
@@ -56,29 +30,13 @@ namespace GL3D {
 			unbind();
 			return true;
 		}
-		bool set_texture(const std::string& uniformName, const Texture& tex, unsigned int textureUnit) const {
-			tex.activate(textureUnit);
-			return set_uniform(uniformName, (int)textureUnit);
-		}
-
-
+		bool set_texture(const std::string& uniformName, const Texture& tex, unsigned int textureUnit) const;
 	private:
-		void set_shader_uniform_from_location(int uniformLocation, float val) const {
-			glUniform1f(uniformLocation, val);
-		}
-		void set_shader_uniform_from_location(int uniformLocation, int val) const {
-			glUniform1i(uniformLocation, val);
-		}
-		void set_shader_uniform_from_location(int uniformLocation, glm::mat4 val) const {
-			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(val));
-		}
-		void set_shader_uniform_from_location(int uniformLocation, glm::mat3 val) const {
-			glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(val));
-		}
-		void set_shader_uniform_from_location(int uniformLocation, glm::vec3 val) const {
-			glUniform3f(uniformLocation, val.x, val.y, val.z);
-		}
-
-
+		std::string get_shader_program_link_error_str() const;
+		void set_shader_uniform_from_location(int uniformLocation, float val) const;
+		void set_shader_uniform_from_location(int uniformLocation, int val) const;
+		void set_shader_uniform_from_location(int uniformLocation, glm::mat4 val) const;
+		void set_shader_uniform_from_location(int uniformLocation, glm::mat3 val) const;
+		void set_shader_uniform_from_location(int uniformLocation, glm::vec3 val) const;
 	};
 }

@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace GLExternalUtils {
-	void APIENTRY gl_debug_output(GLenum source, GLenum type, unsigned int id,
+	static void APIENTRY gl_debug_output(GLenum source, GLenum type, unsigned int id,
 		GLenum severity, GLsizei length,
 		const char* message, const void* userParam) {
 		// ignore non-significant error/warning codes
@@ -86,7 +86,7 @@ namespace GLExternalUtils {
 		assert(false);
 	}
 
-	void enable_gl_debug()
+	static void enable_gl_debug()
 	{
 		int flags;
 		glGetIntegerv(GL_CONTEXT_FLAGS, &flags);

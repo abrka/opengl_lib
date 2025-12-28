@@ -9,31 +9,32 @@ project(opengl_lib_proj)
 
 include(GNUInstallDirs)
 
-add_library(opengl_lib INTERFACE)
+file(GLOB_RECURSE OPENGL_LIB_SOURCES "src/*.cpp" "src/*.h" "src/*.hpp")
+add_library(opengl_lib ${OPENGL_LIB_SOURCES})
 add_library(opengl_lib::opengl_lib ALIAS opengl_lib)
 
 target_include_directories(opengl_lib 
-    INTERFACE 
+    PUBLIC 
      "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
      "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
-target_compile_features(opengl_lib INTERFACE cxx_std_20)
+target_compile_features(opengl_lib PUBLIC cxx_std_20)
 
 # Add glad 
 find_package(glad REQUIRED)
-target_link_libraries(opengl_lib INTERFACE glad::glad)
+target_link_libraries(opengl_lib PRIVATE glad::glad)
 
 # Add glfw
 find_package(glfw3 REQUIRED)
-target_link_libraries(opengl_lib INTERFACE glfw)
+target_link_libraries(opengl_lib PRIVATE glfw)
 
 # Add glm
 find_package(glm REQUIRED)
-target_link_libraries(opengl_lib INTERFACE glm::glm)
+target_link_libraries(opengl_lib PRIVATE glm::glm)
 
 # Add imgui
 find_package(imgui REQUIRED)
-target_link_libraries(opengl_lib INTERFACE imgui::imgui)
+target_link_libraries(opengl_lib PRIVATE imgui::imgui)
 
 # Add example project
 if(OPENGL_LIB_BUILD_EXAMPLE)

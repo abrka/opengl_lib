@@ -5,7 +5,7 @@
 #include "imgui_impl_opengl3.h"
 
 namespace GLExternalUtils {
-	void imgui_init(GLFWwindow* window)
+	static void imgui_init(GLFWwindow* window)
 	{
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -25,7 +25,7 @@ namespace GLExternalUtils {
 	}
 
 
-	void imgui_frame_init()
+	static void imgui_frame_init()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -34,13 +34,13 @@ namespace GLExternalUtils {
 		ImGui::DockSpaceOverViewport(0, 0, ImGuiDockNodeFlags_PassthruCentralNode);
 	}
 
-	void imgui_frame_end()
+	static void imgui_frame_end()
 	{
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 
-	void imgui_destroy()
+	static void imgui_destroy()
 	{
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();

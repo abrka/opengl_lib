@@ -1,15 +1,17 @@
 #pragma once 
 
+#include <stdio.h>
+#include <iostream>
 #include <cassert>
 #include <GLFW/glfw3.h>
 
 namespace GLExternalUtils {
-	void glfw_error_callback(int error, const char* description) {
+	static void glfw_error_callback(int error, const char* description) {
 		fprintf(stderr, "[GLFW ERROR] %d: %s\n", error, description);
 		assert(false);
 	}
 
-	GLFWwindow* glfw_init(int screen_width, int screen_height, int opengl_version_major, int opengl_version_minor) {
+	static GLFWwindow* glfw_init(int screen_width, int screen_height, int opengl_version_major, int opengl_version_minor) {
 		glfwSetErrorCallback(glfw_error_callback);
 		// glfw: initialize and configure
 		// ------------------------------
@@ -37,7 +39,7 @@ namespace GLExternalUtils {
 		glfwMakeContextCurrent(window);
 		return window;
 	}
-	void glfw_frame_end(GLFWwindow* window)
+	static void glfw_frame_end(GLFWwindow* window)
 	{
 		// (Your code calls glfwSwapBuffers() etc.)
 
@@ -49,7 +51,7 @@ namespace GLExternalUtils {
 	}
 
 
-	void glfw_destroy()
+	static void glfw_destroy()
 	{
 		// glfw: terminate, clearing all previously allocated GLFW resources.
 		// ------------------------------------------------------------------
