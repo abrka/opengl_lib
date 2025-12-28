@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <cassert>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace GLExternalUtils {
