@@ -12,17 +12,17 @@ namespace GL3D {
 	struct FragmentShaderTag {};
 	
 	template<typename ShaderType>
-	static int create_opengl_shader_object() {
+	int create_opengl_shader_object() {
 		static_assert("This type of shader is not supported. use VertexShaderTag or FragmentShaderTag");
 		assert(false);
 		return -1;
 	}
 	template<>
-	static int create_opengl_shader_object<VertexShaderTag>() {
+	int create_opengl_shader_object<VertexShaderTag>() {
 		return glCreateShader(GL_VERTEX_SHADER);
 	}
 	template<>
-	static int create_opengl_shader_object<FragmentShaderTag>() {
+	int create_opengl_shader_object<FragmentShaderTag>() {
 		return glCreateShader(GL_FRAGMENT_SHADER);
 	}
 
