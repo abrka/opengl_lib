@@ -12,17 +12,17 @@ namespace GL3D {
 	struct FragmentShaderTag {};
 	
 	template<typename ShaderType>
-	int create_opengl_shader_object() {
+	inline int create_opengl_shader_object() {
 		static_assert("This type of shader is not supported. use VertexShaderTag or FragmentShaderTag");
 		assert(false);
 		return -1;
 	}
 	template<>
-	int create_opengl_shader_object<VertexShaderTag>() {
+	inline int create_opengl_shader_object<VertexShaderTag>() {
 		return glCreateShader(GL_VERTEX_SHADER);
 	}
 	template<>
-	int create_opengl_shader_object<FragmentShaderTag>() {
+	inline int create_opengl_shader_object<FragmentShaderTag>() {
 		return glCreateShader(GL_FRAGMENT_SHADER);
 	}
 
@@ -38,7 +38,7 @@ namespace GL3D {
 			glCompileShader(id);
 			std::string err_msg = get_shader_compile_error_str();
 			if (!err_msg.empty()) {
-				throw std::runtime_error( "vertex shader compile error in source:\n" + shader_source_str + "\nerror :" + err_msg );
+				throw std::runtime_error( "shader compile error in source:\n" + shader_source_str + "\nerror :" + err_msg );
 			}
 		}
 		Shader(const Shader& rhs) = delete;
